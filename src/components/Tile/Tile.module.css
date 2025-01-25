@@ -1,0 +1,3 @@
+.rotate {
+    transform: translateX(100px) rotate(90deg) scale(65/66);
+}
