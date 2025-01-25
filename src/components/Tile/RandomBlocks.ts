@@ -9,6 +9,7 @@ type pssb = {
     kantsu: tilename[][];
     toitsu: tilename[][];
 };
+type mentsutype = "shuntsu" | "koutsu" | "kantsu";
 
 const possibility: Record<tilename, pssb> = {
     "0m": {
@@ -361,6 +362,8 @@ kantsu 3
 export function RandomBlocks(tileset = DEFAULT_TILESET) {
     const yama: tilename[] = Object.entries(tileset).flatMap(([key, count]) => new Array(count).fill(key));
     const mtsus: tilename[] = [];
+    const kan: tilename[] = [];
+
     for (let i = 0; i < 4; i++) {
         const idx = randInt(0, yama.length);
         const curt = yama[idx];
@@ -385,22 +388,34 @@ export function RandomBlocks(tileset = DEFAULT_TILESET) {
         const rand = randInt(0, 3 + 3 * 133 + 4 * 4 * 2 * 133 * coef);
         const midx = randInt(0, 60);
 
-        let mtsu;
+        let mtsutype: mentsutype;
         if (rand < 3) {
-            mtsu = possibility[curt].kantsu[0];
+            mtsutype = "kantsu";
         } else if (rand < 3 + 3 * 133) {
-            mtsu = possibility[curt].koutsu[0];
+            mtsutype = "koutsu";
         } else {
-            mtsu = possibility[curt].shuntsu[midx % possibility[curt].shuntsu.length];
+            mtsutype = "shuntsu";
         }
+        const mtsu = possibility[curt][mtsutype][midx % possibility[curt][mtsutype].length];
 
         // console.log(mtsu);
 
         if (isSubset(yama, mtsu)) {
-            mtsu.forEach((t) => {
-                yama.splice(yama.indexOf(t), 1);
-                mtsus.push(t);
-            });
+            switch (mtsutype) {
+                case "kantsu":
+                    mtsu.forEach((t) => {
+                        yama.splice(yama.indexOf(t), 1);
+                        kan.push(t);
+                    });
+                    break;
+
+                default:
+                    mtsu.forEach((t) => {
+                        yama.splice(yama.indexOf(t), 1);
+                        mtsus.push(t);
+                    });
+                    break;
+            }
         } else {
             i--;
         }
@@ -423,7 +438,10 @@ export function RandomBlocks(tileset = DEFAULT_TILESET) {
         }
     }
     mtsus.sort((a, b) => TILE_O[a] - TILE_O[b]);
+    kan.sort((a, b) => TILE_O[a] - TILE_O[b]);
     console.log(mtsus);
+    console.log(kan);
+    mtsus.push(...kan);
     return mtsus;
 }
 

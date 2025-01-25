@@ -3,6 +3,7 @@ import { Akang, Chii, Dkang, Pong, Skang } from "@/components/Tile/Tiles";
 import { RandomBlocks } from "../Tile/RandomBlocks";
 
 export function NaniMachi() {
+    const a = RandomBlocks();
     return (
         <>
             <Tiles tiles={RandomBlocks()}></Tiles>
