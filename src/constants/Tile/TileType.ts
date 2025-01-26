@@ -4,10 +4,12 @@ export const _souzu = ["0s", "1s", "2s", "3s", "4s", "5s", "6s", "7s", "8s", "9s
 export const _zihai = ["1z", "2z", "3z", "4z", "5z", "6z", "7z"] as const;
 export const _ura = ["0x"] as const;
 
-export const _tilename = [..._manzu, ..._pinzu, ..._souzu, ..._zihai, ..._ura] as const;
+export const _tiletype = [..._manzu, ..._pinzu, ..._souzu, ..._zihai, ..._ura] as const;
 
-export type tilename = (typeof _tilename)[number];
+export type tiletype = (typeof _tiletype)[number];
 
 export function isTile(t: string) {
-    return _tilename.includes(<tilename>t);
+    return _tiletype.includes(<tiletype>t);
 }
+
+export const _yaochuu: tiletype[] = ["1m", "9m", "1p", "9p", "1s", "9s", ..._zihai] as const;

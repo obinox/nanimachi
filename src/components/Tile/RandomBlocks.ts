@@ -1,17 +1,16 @@
-import { MAN, PIN, SOU, TILE, TILE_O, tilename, ZIH } from "@/constants/Tile";
+import { MAN, PIN, SOU, TILE, TILE_O, tiletype, YAOCHUU, ZIH } from "@/constants/Tile";
 import { DEFAULT_TILESET, TILE_N } from "@/constants/Tile";
-import { KANTSU, KOUTSU, SHUNTSU, TOITSU } from "@/enums";
 import { isSubset, randInt } from "@/utility";
 
 type pssb = {
-    shuntsu: tilename[][];
-    koutsu: tilename[][];
-    kantsu: tilename[][];
-    toitsu: tilename[][];
+    shuntsu: tiletype[][];
+    koutsu: tiletype[][];
+    kantsu: tiletype[][];
+    toitsu: tiletype[][];
 };
 type mentsutype = "shuntsu" | "koutsu" | "kantsu";
 
-const possibility: Record<tilename, pssb> = {
+const possibility: Record<tiletype, pssb> = {
     "0m": {
         shuntsu: [
             ["0m", "6m", "7m"],
@@ -279,7 +278,7 @@ const possibility: Record<tilename, pssb> = {
             ["0s", "6s", "7s"],
             ["5s", "6s", "7s"],
             ["6s", "7s", "8s"],
-            ["7s", "8s", "9s"],
+            ["7s", "8s", "ka"],
         ],
         koutsu: [["7s", "7s", "7s"]],
         kantsu: [["7s", "7s", "7s", "7s"]],
@@ -288,17 +287,17 @@ const possibility: Record<tilename, pssb> = {
     "8s": {
         shuntsu: [
             ["6s", "7s", "8s"],
-            ["7s", "8s", "9s"],
+            ["7s", "8s", "ka"],
         ],
         koutsu: [["8s", "8s", "8s"]],
         kantsu: [["8s", "8s", "8s", "8s"]],
         toitsu: [["8s", "8s"]],
     },
     "9s": {
-        shuntsu: [["7s", "8s", "9s"]],
-        koutsu: [["9s", "9s", "9s"]],
-        kantsu: [["9s", "9s", "9s", "9s"]],
-        toitsu: [["9s", "9s"]],
+        shuntsu: [["7s", "8s", "ka"]],
+        koutsu: [["ka", "ka", "ka"]],
+        kantsu: [["ka", "ka", "ka", "ka"]],
+        toitsu: [["ka", "ka"]],
     },
     "1z": {
         shuntsu: [["1z", "1z", "1z"]],
@@ -362,100 +361,138 @@ chitiotsu 3%
 kokushi 0.04%
 */
 
+const W_KOKUSHI = 4;
+const W_CHITOI = 300;
+
 export function RandomBlocks(tileset = DEFAULT_TILESET) {
-    const yama: tilename[] = Object.entries(tileset).flatMap(([key, count]) => new Array(count).fill(key));
-    const mtsus: tilename[][] = [];
-    const kan: tilename[][] = [];
+    const yama: tiletype[] = Object.entries(tileset).flatMap(([key, count]) => new Array(count).fill(key));
+    const mtsus: tiletype[][] = [];
+    const fuuro: tiletype[][] = [];
 
-    for (let i = 0; i < 4; i++) {
-        const idx = randInt(0, yama.length);
-        const curt = yama[idx];
-
-        let coef = 1;
-        switch (TILE_N[curt]) {
-            case 0 | -1:
-                coef = 0;
-                break;
-            case 1 | 9:
-                coef = 1;
-                break;
-            case 2 | 8:
-                coef = 2;
-                break;
-            case 3 | 4 | 5 | 6 | 7:
-                coef = 3;
-                break;
-            default:
-                break;
+    const alter = randInt(0, 10000);
+    if (alter < W_KOKUSHI) {
+        const mtsu: tiletype[] = [];
+        for (const y of YAOCHUU) {
+            mtsu.push(y);
         }
-        const rand = randInt(0, 3 + 3 * 133 + 4 * 4 * 2 * 133 * coef);
-        const midx = randInt(0, 60);
+        mtsus.push(mtsu);
+        mtsus.push([YAOCHUU[randInt(0, 13)]]);
+    } else if (alter < W_CHITOI) {
+        for (let i = 0; i < 7; i++) {
+            const idx = randInt(0, yama.length);
+            const curt = yama[idx];
 
-        let mtsutype: mentsutype;
-        if (rand < 3) {
-            mtsutype = "kantsu";
-        } else if (rand < 3 + 3 * 133) {
-            mtsutype = "koutsu";
-        } else {
-            mtsutype = "shuntsu";
+            const mtsu = possibility[curt].toitsu[0];
+
+            if (isSubset(yama, mtsu) && !mtsus.flat().includes(mtsu[1])) {
+                for (const t of mtsu) {
+                    yama.splice(yama.indexOf(t), 1);
+                }
+                mtsus.push(mtsu);
+            } else {
+                i--;
+            }
         }
-        const mtsu = possibility[curt][mtsutype][midx % possibility[curt][mtsutype].length];
+    } else {
+        for (let i = 0; i < 4; i++) {
+            const idx = randInt(0, yama.length);
+            const curt = yama[idx];
 
-        // console.log(mtsu);
-
-        if (isSubset(yama, mtsu)) {
-            switch (mtsutype) {
-                case "kantsu":
-                    mtsu.forEach((t) => {
-                        yama.splice(yama.indexOf(t), 1);
-                    });
-                    kan.push(mtsu);
+            let coef = 1;
+            switch (TILE_N[curt]) {
+                case 0 | -1:
+                    coef = 0;
                     break;
-
+                case 1 | 9:
+                    coef = 1;
+                    break;
+                case 2 | 8:
+                    coef = 2;
+                    break;
+                case 3 | 4 | 5 | 6 | 7:
+                    coef = 3;
+                    break;
                 default:
-                    mtsu.forEach((t) => {
-                        yama.splice(yama.indexOf(t), 1);
-                    });
-                    mtsus.push(mtsu);
                     break;
             }
-        } else {
-            i--;
+            const rand = randInt(0, 3 + 3 * 133 + 4 * 4 * 2 * 133 * coef);
+            const midx = randInt(0, 60);
+
+            let mtsutype: mentsutype;
+            if (rand < 3) {
+                mtsutype = "kantsu";
+            } else if (rand < 3 + 3 * 133) {
+                mtsutype = "koutsu";
+            } else {
+                mtsutype = "shuntsu";
+            }
+            const mtsu = possibility[curt][mtsutype][midx % possibility[curt][mtsutype].length];
+
+            if (isSubset(yama, mtsu)) {
+                switch (mtsutype) {
+                    case "kantsu":
+                        for (const t of mtsu) {
+                            yama.splice(yama.indexOf(t), 1);
+                        }
+                        fuuro.push(mtsu);
+                        break;
+
+                    default:
+                        for (const t of mtsu) {
+                            yama.splice(yama.indexOf(t), 1);
+                        }
+                        mtsus.push(mtsu);
+                        break;
+                }
+            } else {
+                i--;
+            }
+        }
+        for (let i = 0; i < 1; i++) {
+            const idx = randInt(0, yama.length);
+            const curt = yama[idx];
+
+            const mtsu = possibility[curt].toitsu[0];
+
+            // console.log(mtsu);
+
+            if (isSubset(yama, mtsu)) {
+                for (const t of mtsu) {
+                    yama.splice(yama.indexOf(t), 1);
+                }
+                mtsus.push(mtsu);
+            } else {
+                i--;
+            }
         }
     }
-    for (let i = 0; i < 1; i++) {
-        const idx = randInt(0, yama.length);
-        const curt = yama[idx];
 
-        const mtsu = possibility[curt].toitsu[0];
-
-        // console.log(mtsu);
-
-        if (isSubset(yama, mtsu)) {
-            mtsu.forEach((t) => {
-                yama.splice(yama.indexOf(t), 1);
-            });
-            mtsus.push(mtsu);
-        } else {
-            i--;
-        }
-    }
     console.log(mtsus);
-    console.log(kan);
+    console.log(fuuro);
     // mtsus.push(...kan);
-    return { mtsus, kan };
+    return { mtsus, fuuro };
 }
 
-export function Flat({ mtsus, kan }: { mtsus: tilename[][]; kan: tilename[][] }) {
-    const tiles: tilename[] = [];
-    mtsus.forEach((m) => {
+export function Flat({ mtsus, fuuro }: { mtsus: tiletype[][]; fuuro: tiletype[][] }) {
+    const tiles: tiletype[] = [];
+    for (const m of mtsus) {
         tiles.push(...m);
-    });
+    }
     tiles.sort((a, b) => TILE_O[a] - TILE_O[b]);
-    kan.forEach((m) => {
+    for (const m of fuuro) {
         tiles.push(...m);
-    });
+    }
     return tiles;
+}
+
+export function Format({ mtsus, fuuro }: { mtsus: tiletype[][]; fuuro: tiletype[][] }) {
+    const tiles: tiletype[] = [];
+    for (const m of mtsus) {
+        tiles.push(...m);
+    }
+    tiles.sort((a, b) => TILE_O[a] - TILE_O[b]);
+
+    return { tiles, fuuro };
 }
 
 // TILE.forEach((e) => {

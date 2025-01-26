@@ -1,6 +1,6 @@
-import { tilename } from "@/constants/Tile";
+import { tiletype } from "@/constants/Tile";
 
-export const DEFAULT_TILESET: Record<tilename, number> = Object.freeze({
+export const DEFAULT_TILESET: Record<tiletype, number> = Object.freeze({
     "0m": 1,
     "1m": 4,
     "2m": 4,
@@ -41,7 +41,7 @@ export const DEFAULT_TILESET: Record<tilename, number> = Object.freeze({
     "0x": 0,
 });
 
-export const DEFAULT_SANMA: Record<tilename, number> = Object.freeze({
+export const DEFAULT_SANMA: Record<tiletype, number> = Object.freeze({
     "0m": 0,
     "1m": 4,
     "2m": 0,
@@ -82,7 +82,7 @@ export const DEFAULT_SANMA: Record<tilename, number> = Object.freeze({
     "0x": 0,
 });
 
-export const TILE_N: Record<tilename, number> = Object.freeze({
+export const TILE_N: Record<tiletype, number> = Object.freeze({
     "0m": 5,
     "1m": 1,
     "2m": 2,
@@ -123,7 +123,7 @@ export const TILE_N: Record<tilename, number> = Object.freeze({
     "0x": -1,
 });
 
-export const TILE_G: Record<tilename, number> = Object.freeze({
+export const TILE_G: Record<tiletype, number> = Object.freeze({
     "0m": 0,
     "1m": 0,
     "2m": 0,
@@ -164,7 +164,7 @@ export const TILE_G: Record<tilename, number> = Object.freeze({
     "0x": -1,
 });
 
-export const TILE_O: Record<tilename, number> = Object.freeze({
+export const TILE_O: Record<tiletype, number> = Object.freeze({
     "0m": 4,
     "1m": 0,
     "2m": 1,

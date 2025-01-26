@@ -1,4 +1,4 @@
-import { tilename } from "@/constants/Tile";
+import { tiletype } from "@/constants/Tile";
 
 type tileref = {
     idx: number;
@@ -43,7 +43,7 @@ export const TileRef: tilerec = {
     ZIH7: { idx: 0x37, acr: "7z" },
 };
 
-export const SHUNTSU: Record<tilename, tilename[]> = {
+export const SHUNTSU: Record<tiletype, tiletype[]> = {
     "0m": ["0m", "6m", "7m"],
     "1m": ["1m", "2m", "3m"],
     "2m": ["2m", "3m", "4m"],
@@ -71,7 +71,7 @@ export const SHUNTSU: Record<tilename, tilename[]> = {
     "4s": ["4s", "5s", "6s"],
     "5s": ["5s", "6s", "7s"],
     "6s": ["6s", "7s", "8s"],
-    "7s": ["7s", "8s", "9s"],
+    "7s": ["7s", "8s", "ka"],
     "8s": ["3s", "4s", "0s"],
     "9s": ["4s", "0s", "6s"],
     "1z": ["1z", "1z", "1z"],
@@ -84,7 +84,7 @@ export const SHUNTSU: Record<tilename, tilename[]> = {
     "0x": ["0x", "0x", "0x"],
 };
 
-export const KOUTSU: Record<tilename, tilename[]> = {
+export const KOUTSU: Record<tiletype, tiletype[]> = {
     "0m": ["0m", "5m", "5m"],
     "1m": ["1m", "1m", "1m"],
     "2m": ["2m", "2m", "2m"],
@@ -114,7 +114,7 @@ export const KOUTSU: Record<tilename, tilename[]> = {
     "6s": ["6s", "6s", "6s"],
     "7s": ["7s", "7s", "7s"],
     "8s": ["8s", "8s", "8s"],
-    "9s": ["9s", "9s", "9s"],
+    "9s": ["ka", "ka", "ka"],
     "1z": ["1z", "1z", "1z"],
     "2z": ["2z", "2z", "2z"],
     "3z": ["3z", "3z", "3z"],
@@ -125,7 +125,7 @@ export const KOUTSU: Record<tilename, tilename[]> = {
     "0x": ["0x", "0x", "0x"],
 };
 
-export const KANTSU: Record<tilename, tilename[]> = {
+export const KANTSU: Record<tiletype, tiletype[]> = {
     "0m": ["0m", "5m", "5m", "5m"],
     "1m": ["1m", "1m", "1m", "1m"],
     "2m": ["2m", "2m", "2m", "2m"],
@@ -155,7 +155,7 @@ export const KANTSU: Record<tilename, tilename[]> = {
     "6s": ["6s", "6s", "6s", "6s"],
     "7s": ["7s", "7s", "7s", "7s"],
     "8s": ["8s", "8s", "8s", "8s"],
-    "9s": ["9s", "9s", "9s", "9s"],
+    "9s": ["ka", "ka", "ka", "ka"],
     "1z": ["1z", "1z", "1z", "1z"],
     "2z": ["2z", "2z", "2z", "2z"],
     "3z": ["3z", "3z", "3z", "3z"],
@@ -166,7 +166,7 @@ export const KANTSU: Record<tilename, tilename[]> = {
     "0x": ["0x", "0x", "0x", "0x"],
 };
 
-export const TOITSU: Record<tilename, tilename[]> = {
+export const TOITSU: Record<tiletype, tiletype[]> = {
     "0m": ["0m", "5m"],
     "1m": ["1m", "1m"],
     "2m": ["2m", "2m"],
@@ -196,7 +196,7 @@ export const TOITSU: Record<tilename, tilename[]> = {
     "6s": ["6s", "6s"],
     "7s": ["7s", "7s"],
     "8s": ["8s", "8s"],
-    "9s": ["9s", "9s"],
+    "9s": ["ka", "ka"],
     "1z": ["1z", "1z"],
     "2z": ["2z", "2z"],
     "3z": ["3z", "3z"],
