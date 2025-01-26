@@ -357,12 +357,15 @@ shuntsu 4*4*2*133
     3 ~ 7 => *3
 koutsu 3*133
 kantsu 3
+
+chitiotsu 3%
+kokushi 0.04%
 */
 
 export function RandomBlocks(tileset = DEFAULT_TILESET) {
     const yama: tilename[] = Object.entries(tileset).flatMap(([key, count]) => new Array(count).fill(key));
-    const mtsus: tilename[] = [];
-    const kan: tilename[] = [];
+    const mtsus: tilename[][] = [];
+    const kan: tilename[][] = [];
 
     for (let i = 0; i < 4; i++) {
         const idx = randInt(0, yama.length);
@@ -405,15 +408,15 @@ export function RandomBlocks(tileset = DEFAULT_TILESET) {
                 case "kantsu":
                     mtsu.forEach((t) => {
                         yama.splice(yama.indexOf(t), 1);
-                        kan.push(t);
                     });
+                    kan.push(mtsu);
                     break;
 
                 default:
                     mtsu.forEach((t) => {
                         yama.splice(yama.indexOf(t), 1);
-                        mtsus.push(t);
                     });
+                    mtsus.push(mtsu);
                     break;
             }
         } else {
@@ -431,18 +434,28 @@ export function RandomBlocks(tileset = DEFAULT_TILESET) {
         if (isSubset(yama, mtsu)) {
             mtsu.forEach((t) => {
                 yama.splice(yama.indexOf(t), 1);
-                mtsus.push(t);
             });
+            mtsus.push(mtsu);
         } else {
             i--;
         }
     }
-    mtsus.sort((a, b) => TILE_O[a] - TILE_O[b]);
-    kan.sort((a, b) => TILE_O[a] - TILE_O[b]);
     console.log(mtsus);
     console.log(kan);
-    mtsus.push(...kan);
-    return mtsus;
+    // mtsus.push(...kan);
+    return { mtsus, kan };
+}
+
+export function Flat({ mtsus, kan }: { mtsus: tilename[][]; kan: tilename[][] }) {
+    const tiles: tilename[] = [];
+    mtsus.forEach((m) => {
+        tiles.push(...m);
+    });
+    tiles.sort((a, b) => TILE_O[a] - TILE_O[b]);
+    kan.forEach((m) => {
+        tiles.push(...m);
+    });
+    return tiles;
 }
 
 // TILE.forEach((e) => {

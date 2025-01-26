@@ -1,22 +1,20 @@
 import { Tile, Tiles, Dtile } from "@/components/Tile";
-import { Akang, Chii, Dkang, Pong, Skang } from "@/components/Tile/Tiles";
-import { RandomBlocks } from "../Tile/RandomBlocks";
+import { Akang, Chii, Dkang, Pong, Skang } from "@/components/Tile";
+import { RandomBlocks, Flat } from "@/components/Tile";
 
 export function NaniMachi() {
     const a = RandomBlocks();
     return (
         <>
-            <Tiles tiles={RandomBlocks()}></Tiles>
+            <Tiles tiles={Flat(RandomBlocks())}></Tiles>
             <br></br>
-            <Tiles tiles={RandomBlocks()}></Tiles>
+            <Tiles tiles={Flat(RandomBlocks())}></Tiles>
             <br></br>
-            <Tiles tiles={RandomBlocks()}></Tiles>
+            <Tiles tiles={Flat(RandomBlocks())}></Tiles>
             <br></br>
-            <Tiles tiles={RandomBlocks()}></Tiles>
+            <Tiles tiles={Flat(RandomBlocks())}></Tiles>
             <br></br>
-            <Tiles tiles={RandomBlocks()}></Tiles>
-            <br></br>
-            <Tiles tiles={RandomBlocks()}></Tiles>
+            <Tiles tiles={Flat(RandomBlocks())}></Tiles>
             <br></br>
             {/* <Tile tile={"0m"} turned={false}></Tile>
             <Tile tile={"0s"} turned={false}></Tile>
