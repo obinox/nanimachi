@@ -86,7 +86,6 @@ export function RandomBlocks(tileset = DEFAULT_TILESET) {
                 mtsutype = "kantsu";
             } else if (rand < 3 + 3 * 133) {
                 mtsutype = "koutsu";
-                mtsutype = "kantsu";
             } else {
                 mtsutype = "shuntsu";
             }
