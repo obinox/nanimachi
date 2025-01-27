@@ -1,1 +1,1 @@
-export { SHUNTSU, KOUTSU, KANTSU, TOITSU } from "./Mentsu";
+export { SHUNTSU, KOUTSU, KANTSU, TOITSU, possibility } from "./Mentsu";

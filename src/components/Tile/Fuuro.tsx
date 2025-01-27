@@ -14,11 +14,11 @@ export function Chii({ tile, fidx = 0 }: { tile: tiletype; fidx?: number }) {
     tiles.splice(0, 0, ftile);
 
     return (
-        <>
+        <div style={{ display: "inline-block" }}>
             {tiles.map((t, idx) => (
                 <Stile tile={t} turned={idx === 0} key={t + "$" + idx}></Stile>
             ))}
-        </>
+        </div>
     );
 }
 
@@ -34,11 +34,11 @@ export function Pong({ tile, sidx = 0, omo = false }: { tile: tiletype; sidx?: n
     tiles.splice(sidx, 0, ftile);
 
     return (
-        <>
+        <div style={{ display: "inline-block" }}>
             {tiles.map((t, idx) => (
                 <Stile tile={t} turned={idx === sidx} key={t + "$" + idx}></Stile>
             ))}
-        </>
+        </div>
     );
 }
 
@@ -50,11 +50,11 @@ export function Akang({ tile }: { tile: tiletype }) {
     tiles.splice(3, 0, "0x");
 
     return (
-        <>
+        <div style={{ display: "inline-block" }}>
             {tiles.map((t, idx) => (
                 <Stile tile={t} key={t + "$" + idx}></Stile>
             ))}
-        </>
+        </div>
     );
 }
 
@@ -74,11 +74,11 @@ export function Dkang({ tile, sidx = 0, omo = false }: { tile: tiletype; sidx?: 
     tiles.splice(sidx, 0, ftile);
 
     return (
-        <>
+        <div style={{ display: "inline-block" }}>
             {tiles.map((t, idx) => (
                 <Stile tile={t} turned={idx === sidx} key={t + "$" + idx}></Stile>
             ))}
-        </>
+        </div>
     );
 }
 
@@ -94,7 +94,7 @@ export function Skang({ tile, sidx = 0, omo = false }: { tile: tiletype; sidx?: 
     tiles.splice(sidx, 0, ftile);
 
     return (
-        <>
+        <div style={{ display: "inline-block" }}>
             {tiles.slice(0, 3).map((t, idx) => {
                 if (idx === sidx) {
                     return <Dtile dtile={t} utile={tiles[3]} key={t + "$" + idx}></Dtile>;
@@ -102,7 +102,7 @@ export function Skang({ tile, sidx = 0, omo = false }: { tile: tiletype; sidx?: 
                     return <Stile tile={t} key={t + "$" + idx}></Stile>;
                 }
             })}
-        </>
+        </div>
     );
 }
 
