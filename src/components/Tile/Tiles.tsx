@@ -3,7 +3,7 @@ import { tilest } from "@/lib/Tile";
 import { SHUNTSU, KANTSU, KOUTSU } from "@/lib/enums";
 import { vtok } from "@/utility";
 
-export function Tiles({ tiles, agaru, fuuro, fsidx }: { tiles: tilest[]; agaru?: string; fuuro?: tilest[][]; fsidx?: number[] }) {
+export function Tiles({ tiles, agaru, agarus, fuuro, fsidx }: { tiles: tilest[]; agaru?: tilest; agarus?: tilest[]; fuuro?: tilest[][]; fsidx?: number[] }) {
     return (
         <>
             <div style={{ height: "auto" }}>
@@ -12,6 +12,8 @@ export function Tiles({ tiles, agaru, fuuro, fsidx }: { tiles: tilest[]; agaru?:
                 ))}
                 {agaru && "agaru: "}
                 {agaru && <Stile tile={agaru} key="agaru"></Stile>}
+                {agarus && "agarus: "}
+                {agarus?.map((t, idx) => <Stile tile={t} key={idx}></Stile>)}
                 {fuuro?.length ? "fuuro: " : ""}
                 {fuuro?.map((m, idx) => {
                     console.log("fuuro: ", m);

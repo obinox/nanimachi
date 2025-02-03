@@ -1,22 +1,22 @@
 import { Stile, Tiles, Dtile, Format } from "@/components/Tile";
 import { Akang, Chii, Dkang, Pong, Skang } from "@/components/Tile";
-import { RDBlocks, FlatRDB, FormatRDTsumo } from "@/lib/Tile";
+import { RDBlocks, FlatRDB, FormatRDTsumo, MANZU_ISOU, PINZU_ISOU, SOUZU_ISOU,  } from "@/lib/Tile";
 
 export function NaniMachi() {
     const a = RDBlocks();
     return (
         <>
-            <Tiles {...FormatRDTsumo(RDBlocks())}></Tiles>
+            <Tiles {...FormatRDTsumo(RDBlocks(MANZU_ISOU))}></Tiles>
             <br></br>
-            <Tiles {...FormatRDTsumo(RDBlocks())}></Tiles>
+            <Tiles {...FormatRDTsumo(RDBlocks(PINZU_ISOU))}></Tiles>
             <br></br>
-            <Tiles {...FormatRDTsumo(RDBlocks())}></Tiles>
+            <Tiles {...FormatRDTsumo(RDBlocks(SOUZU_ISOU))}></Tiles>
             <br></br>
-            <Tiles {...FormatRDTsumo(RDBlocks())}></Tiles>
+            <Tiles {...FormatRDTsumo(RDBlocks(MANZU_ISOU))}></Tiles>
             <br></br>
-            <Tiles {...FormatRDTsumo(RDBlocks())}></Tiles>
+            <Tiles {...FormatRDTsumo(RDBlocks(PINZU_ISOU))}></Tiles>
             <br></br>
-            <Tiles {...FormatRDTsumo(RDBlocks())}></Tiles>
+            <Tiles {...FormatRDTsumo(RDBlocks(SOUZU_ISOU))}></Tiles>
             <br></br>
             {/* <Tile tile={"0m"} turned={false}></Tile>
             <Tile tile={"0s"} turned={false}></Tile>
