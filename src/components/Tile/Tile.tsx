@@ -1,11 +1,11 @@
-import { tiletype, isTile } from "@/constants/Tile";
+import { tilest, isTile } from "@/lib/Tile";
 import Image from "next/image";
 
 export const T_WIDTH = 45;
 export const T_HEIGHT = 65;
-export const T_COEF = 2;
+export const T_COEF = 1.5;
 
-export function Stile({ tile, turned = false }: { tile: tiletype | string; turned?: boolean }) {
+export function Stile({ tile, turned = false }: { tile: tilest | string; turned?: boolean }) {
     if (!isTile(tile)) {
         tile = "0x";
     }
@@ -16,7 +16,7 @@ export function Stile({ tile, turned = false }: { tile: tiletype | string; turne
     );
 }
 
-export function Dtile({ dtile, utile }: { dtile: tiletype | string; utile?: tiletype | string }) {
+export function Dtile({ dtile, utile }: { dtile: tilest | string; utile?: tilest | string }) {
     return (
         <div style={{ display: "inline-flex", position: "relative", width: T_HEIGHT * T_COEF, height: T_WIDTH * T_COEF * 2 }}>
             <div style={{ display: "inline-flex", flexDirection: "column-reverse", position: "absolute", bottom: 0, height: 0 }}>

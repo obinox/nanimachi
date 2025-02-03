@@ -1,6 +1,7 @@
-import { tiletype } from "@/constants/Tile";
+import { tilest } from "@/lib/Tile";
+import { rdonly } from "@/utility";
 
-export const DEFAULT_TILESET: Record<tiletype, number> = Object.freeze({
+export const DEFAULT_TILESET: rdonly<tilest, number> = {
     "0m": 1,
     "1m": 4,
     "2m": 4,
@@ -39,9 +40,9 @@ export const DEFAULT_TILESET: Record<tiletype, number> = Object.freeze({
     "6z": 4,
     "7z": 4,
     "0x": 0,
-});
+};
 
-export const DEFAULT_SANMA: Record<tiletype, number> = Object.freeze({
+export const DEFAULT_SANMA: rdonly<tilest, number> = {
     "0m": 0,
     "1m": 4,
     "2m": 0,
@@ -80,9 +81,9 @@ export const DEFAULT_SANMA: Record<tiletype, number> = Object.freeze({
     "6z": 4,
     "7z": 4,
     "0x": 0,
-});
+};
 
-export const TILE_N: Record<tiletype, number> = Object.freeze({
+export const TILE_N: rdonly<tilest, number> = {
     "0m": 5,
     "1m": 1,
     "2m": 2,
@@ -121,9 +122,9 @@ export const TILE_N: Record<tiletype, number> = Object.freeze({
     "6z": 0,
     "7z": 0,
     "0x": -1,
-});
+};
 
-export const TILE_G: Record<tiletype, number> = Object.freeze({
+export const TILE_G: rdonly<tilest, number> = {
     "0m": 0,
     "1m": 0,
     "2m": 0,
@@ -158,13 +159,13 @@ export const TILE_G: Record<tiletype, number> = Object.freeze({
     "2z": 3,
     "3z": 3,
     "4z": 3,
-    "5z": 3,
-    "6z": 3,
-    "7z": 3,
+    "5z": 4,
+    "6z": 4,
+    "7z": 4,
     "0x": -1,
-});
+};
 
-export const TILE_O: Record<tiletype, number> = Object.freeze({
+export const TILE_O: rdonly<tilest, number> = {
     "0m": 4,
     "1m": 0,
     "2m": 1,
@@ -175,7 +176,7 @@ export const TILE_O: Record<tiletype, number> = Object.freeze({
     "7m": 7,
     "8m": 8,
     "9m": 9,
-    "0p": 15,
+    "0p": 14,
     "1p": 10,
     "2p": 11,
     "3p": 12,
@@ -185,7 +186,7 @@ export const TILE_O: Record<tiletype, number> = Object.freeze({
     "7p": 17,
     "8p": 18,
     "9p": 19,
-    "0s": 25,
+    "0s": 24,
     "1s": 20,
     "2s": 21,
     "3s": 22,
@@ -203,4 +204,4 @@ export const TILE_O: Record<tiletype, number> = Object.freeze({
     "6z": 35,
     "7z": 36,
     "0x": -1,
-});
+};

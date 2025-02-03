@@ -1,8 +1,8 @@
-import { tiletype } from "@/constants/Tile";
-import { KANTSU, KOUTSU, SHUNTSU } from "@/enums";
+import { tilest } from "@/lib/Tile";
+import { KANTSU, KOUTSU, SHUNTSU } from "@/lib/enums";
 import { Stile, Dtile } from "@/components/Tile";
 
-export function Chii({ tile, fidx = 0 }: { tile: tiletype; fidx?: number }) {
+export function Chii({ tile, fidx = 0 }: { tile: tilest; fidx?: number }) {
     const tiles = SHUNTSU[tile].slice();
 
     fidx = Math.min(fidx, 2);
@@ -22,7 +22,7 @@ export function Chii({ tile, fidx = 0 }: { tile: tiletype; fidx?: number }) {
     );
 }
 
-export function Pong({ tile, sidx = 0, omo = false }: { tile: tiletype; sidx?: number; omo?: boolean }) {
+export function Pong({ tile, sidx = 0, omo = false }: { tile: tilest; sidx?: number; omo?: boolean }) {
     const tiles = KOUTSU[tile].slice();
 
     sidx = Math.min(sidx, 3);
@@ -42,7 +42,7 @@ export function Pong({ tile, sidx = 0, omo = false }: { tile: tiletype; sidx?: n
     );
 }
 
-export function Akang({ tile }: { tile: tiletype }) {
+export function Akang({ tile }: { tile: tilest }) {
     const tiles = KANTSU[tile].slice();
 
     tiles.splice(2, 2);
@@ -58,7 +58,7 @@ export function Akang({ tile }: { tile: tiletype }) {
     );
 }
 
-export function Dkang({ tile, sidx = 0, omo = false }: { tile: tiletype; sidx?: number; omo?: boolean }) {
+export function Dkang({ tile, sidx = 0, omo = false }: { tile: tilest; sidx?: number; omo?: boolean }) {
     const tiles = KANTSU[tile].slice().sort();
 
     sidx = Math.min(sidx, 3);
@@ -82,7 +82,7 @@ export function Dkang({ tile, sidx = 0, omo = false }: { tile: tiletype; sidx?: 
     );
 }
 
-export function Skang({ tile, sidx = 0, omo = false }: { tile: tiletype; sidx?: number; omo?: boolean }) {
+export function Skang({ tile, sidx = 0, omo = false }: { tile: tilest; sidx?: number; omo?: boolean }) {
     const tiles = KANTSU[tile].slice();
 
     sidx = Math.min(sidx, 3);
@@ -106,7 +106,7 @@ export function Skang({ tile, sidx = 0, omo = false }: { tile: tiletype; sidx?: 
     );
 }
 
-export function Kang({ tile, sidx = 0, omo = false }: { tile: tiletype; sidx?: number; omo?: boolean }) {
+export function Kang({ tile, sidx = 0, omo = false }: { tile: tilest; sidx?: number; omo?: boolean }) {
     sidx = Math.min(sidx, 7);
     sidx = Math.max(sidx, 0);
 

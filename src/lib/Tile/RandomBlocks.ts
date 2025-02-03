@@ -1,7 +1,8 @@
-import { MAN, PIN, SOU, TILE, TILE_O, tiletype, YAOCHUU, ZIH } from "@/constants/Tile";
-import { DEFAULT_TILESET, TILE_N } from "@/constants/Tile";
-import { possibility } from "@/enums";
+import { MAN, PIN, SOU, TILE, TILE_O, tilest, YAOCHUU, ZIH } from "@/lib/Tile";
+import { DEFAULT_TILESET, TILE_N } from "@/lib/Tile";
+import { possibility } from "@/lib/enums";
 import { isSubset, randInt } from "@/utility";
+import { calc } from "@/lib/Machi";
 
 type mentsutype = "shuntsu" | "koutsu" | "kantsu";
 
@@ -20,14 +21,14 @@ kokushi 0.04%
 const W_KOKUSHI = 4;
 const W_CHITOI = 300;
 
-export function RandomBlocks(tileset = DEFAULT_TILESET) {
-    const yama: tiletype[] = Object.entries(tileset).flatMap(([key, count]) => new Array(count).fill(key));
-    const mtsus: tiletype[][] = [];
-    const fuuro: tiletype[][] = [];
+export function RDBlocks(tileset = DEFAULT_TILESET) {
+    const yama: tilest[] = Object.entries(tileset).flatMap(([key, count]) => new Array(count).fill(key));
+    const mtsus: tilest[][] = [];
+    const fuuro: tilest[][] = [];
 
     const alter = randInt(0, 10000);
     if (alter < W_KOKUSHI) {
-        const mtsu: tiletype[] = [];
+        const mtsu: tilest[] = [];
         for (const y of YAOCHUU) {
             mtsu.push(y);
         }
@@ -129,15 +130,14 @@ export function RandomBlocks(tileset = DEFAULT_TILESET) {
             }
         }
     }
-
     // console.log(mtsus);
     // console.log(fuuro);
     // mtsus.push(...kan);
     return { mtsus, fuuro };
 }
 
-export function Flat({ mtsus, fuuro }: { mtsus: tiletype[][]; fuuro: tiletype[][] }) {
-    const tiles: tiletype[] = [];
+export function FlatRDB({ mtsus, fuuro }: { mtsus: tilest[][]; fuuro: tilest[][] }) {
+    const tiles: tilest[] = [];
     for (const m of mtsus) {
         tiles.push(...m);
     }
@@ -148,8 +148,8 @@ export function Flat({ mtsus, fuuro }: { mtsus: tiletype[][]; fuuro: tiletype[][
     return tiles;
 }
 
-export function Format({ mtsus, fuuro }: { mtsus: tiletype[][]; fuuro: tiletype[][] }) {
-    const tiles: tiletype[] = [];
+export function Format({ mtsus, fuuro }: { mtsus: tilest[][]; fuuro: tilest[][] }) {
+    const tiles: tilest[] = [];
     for (const m of mtsus) {
         tiles.push(...m);
     }
@@ -163,8 +163,8 @@ export function Format({ mtsus, fuuro }: { mtsus: tiletype[][]; fuuro: tiletype[
     return { tiles, fuuro, fsidx };
 }
 
-export function FormatRdTsumo({ mtsus, fuuro }: { mtsus: tiletype[][]; fuuro: tiletype[][] }) {
-    const tiles: tiletype[] = [];
+export function FormatRDTsumo({ mtsus, fuuro }: { mtsus: tilest[][]; fuuro: tilest[][] }) {
+    const tiles: tilest[] = [];
     for (const m of mtsus) {
         tiles.push(...m);
     }
@@ -179,6 +179,8 @@ export function FormatRdTsumo({ mtsus, fuuro }: { mtsus: tiletype[][]; fuuro: ti
     for (let i = 0; i < fuuro.length; i++) {
         fsidx.push(randInt(0, 8));
     }
+
+    console.log(calc(tiles));
 
     return { tiles, fuuro, agaru, fsidx };
 }

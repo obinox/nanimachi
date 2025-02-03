@@ -1,49 +1,7 @@
-import { tiletype } from "@/constants/Tile";
+import { tilest } from "@/lib/Tile";
+import { rdonly } from "@/utility";
 
-type tileref = {
-    idx: number;
-    acr: string;
-};
-type tilerec = Record<string, tileref>;
-
-export const TileRef: tilerec = {
-    MAN1: { idx: 0x01, acr: "1m" },
-    MAN2: { idx: 0x02, acr: "2m" },
-    MAN3: { idx: 0x03, acr: "3m" },
-    MAN4: { idx: 0x04, acr: "4m" },
-    MAN5: { idx: 0x05, acr: "5m" },
-    MAN6: { idx: 0x06, acr: "6m" },
-    MAN7: { idx: 0x07, acr: "7m" },
-    MAN8: { idx: 0x08, acr: "8m" },
-    MAN9: { idx: 0x09, acr: "9m" },
-    PIN1: { idx: 0x11, acr: "1p" },
-    PIN2: { idx: 0x12, acr: "2p" },
-    PIN3: { idx: 0x13, acr: "3p" },
-    PIN4: { idx: 0x14, acr: "4p" },
-    PIN5: { idx: 0x15, acr: "5p" },
-    PIN6: { idx: 0x16, acr: "6p" },
-    PIN7: { idx: 0x17, acr: "7p" },
-    PIN8: { idx: 0x18, acr: "8p" },
-    PIN9: { idx: 0x19, acr: "9p" },
-    SOU1: { idx: 0x21, acr: "1s" },
-    SOU2: { idx: 0x22, acr: "2s" },
-    SOU3: { idx: 0x23, acr: "3s" },
-    SOU4: { idx: 0x24, acr: "4s" },
-    SOU5: { idx: 0x25, acr: "5s" },
-    SOU6: { idx: 0x26, acr: "6s" },
-    SOU7: { idx: 0x27, acr: "7s" },
-    SOU8: { idx: 0x28, acr: "8s" },
-    SOU9: { idx: 0x29, acr: "9s" },
-    ZIH1: { idx: 0x31, acr: "1z" },
-    ZIH2: { idx: 0x32, acr: "2z" },
-    ZIH3: { idx: 0x33, acr: "3z" },
-    ZIH4: { idx: 0x34, acr: "4z" },
-    ZIH5: { idx: 0x35, acr: "5z" },
-    ZIH6: { idx: 0x36, acr: "6z" },
-    ZIH7: { idx: 0x37, acr: "7z" },
-};
-
-export const SHUNTSU: Record<tiletype, tiletype[]> = {
+export const SHUNTSU: rdonly<tilest, tilest[]> = {
     "0m": ["0m", "6m", "7m"],
     "1m": ["1m", "2m", "3m"],
     "2m": ["2m", "3m", "4m"],
@@ -84,7 +42,7 @@ export const SHUNTSU: Record<tiletype, tiletype[]> = {
     "0x": ["0x", "0x", "0x"],
 };
 
-export const KOUTSU: Record<tiletype, tiletype[]> = {
+export const KOUTSU: rdonly<tilest, tilest[]> = {
     "0m": ["0m", "5m", "5m"],
     "1m": ["1m", "1m", "1m"],
     "2m": ["2m", "2m", "2m"],
@@ -125,7 +83,7 @@ export const KOUTSU: Record<tiletype, tiletype[]> = {
     "0x": ["0x", "0x", "0x"],
 };
 
-export const KANTSU: Record<tiletype, tiletype[]> = {
+export const KANTSU: rdonly<tilest, tilest[]> = {
     "0m": ["0m", "5m", "5m", "5m"],
     "1m": ["1m", "1m", "1m", "1m"],
     "2m": ["2m", "2m", "2m", "2m"],
@@ -166,7 +124,7 @@ export const KANTSU: Record<tiletype, tiletype[]> = {
     "0x": ["0x", "0x", "0x", "0x"],
 };
 
-export const TOITSU: Record<tiletype, tiletype[]> = {
+export const TOITSU: rdonly<tilest, tilest[]> = {
     "0m": ["0m", "5m"],
     "1m": ["1m", "1m"],
     "2m": ["2m", "2m"],
@@ -208,13 +166,13 @@ export const TOITSU: Record<tiletype, tiletype[]> = {
 };
 
 type pssb = {
-    shuntsu: tiletype[][];
-    koutsu: tiletype[][];
-    kantsu: tiletype[][];
-    toitsu: tiletype[][];
+    shuntsu: tilest[][];
+    koutsu: tilest[][];
+    kantsu: tilest[][];
+    toitsu: tilest[][];
 };
 
-export const possibility: Record<tiletype, pssb> = {
+export const possibility: rdonly<tilest, pssb> = {
     "0m": {
         shuntsu: [
             ["0m", "6m", "7m"],
