@@ -18,3 +18,18 @@ export function isSubset<T>(s: T[], a: T[]): boolean {
 
     return true;
 }
+
+export function rmDups<T>(arr: T[][]): T[][] {
+    const set: Set<string> = new Set();
+    const out: T[][] = [];
+
+    for (const a of arr) {
+        const key = JSON.stringify(a);
+        if (!set.has(key)) {
+            set.add(key);
+            out.push(a);
+        }
+    }
+
+    return out;
+}
