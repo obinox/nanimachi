@@ -1,5 +1,5 @@
 import { kazet, manzut, pinzut, sangent, souzut, TILE_G, TILE_N, TILE_O, tilest, zihait } from "@/lib/Tile";
-import { isSubset, rmDups } from "@/utility";
+import { isSubset } from "@/utility";
 
 type machi = "rml" | "rmr" | "shp" | "kan" | "pn3" | "pn7" | "tan";
 
@@ -9,6 +9,52 @@ type zihv = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 interface tenpai {
     tile: tilest;
     machi: machi;
+}
+
+export function delDups<T>(arr: T[], cond: (e: T) => T | string | number = (e) => JSON.stringify(e)): T[] {
+    const set: Set<T | string | number> = new Set();
+    const out: T[] = [];
+    for (const e of arr) {
+        const c = cond(e);
+        if (!set.has(c)) {
+            set.add(c);
+            out.push(e);
+        }
+    }
+    return out;
+}
+export function hasDups<T>(arr: T[], cond: (e: T) => T | string | number = (e) => JSON.stringify(e)): boolean {
+    const set = new Set<T | string | number>();
+    for (const e of arr) {
+        const c = cond(e);
+        if (set.has(c)) {
+            return true;
+        }
+        set.add(c);
+    }
+    return false;
+}
+export function matDups<T>(arr: T[], cond: (e: T) => T | string | number = (e) => JSON.stringify(e)): T[] {
+    const map = new Map<T | string | number, number>();
+    const out: T[] = [];
+    for (const e of arr) {
+        const c = cond(e);
+        if (!map.has(c)) {
+            out.push(e);
+        }
+        map.set(c, (map.get(c) ?? 0) + 1);
+    }
+    return out.filter((e) => (map.get(cond(e)) ?? 0) % 2 !== 0);
+}
+export function subtract<T>(s: T[], a: T[]) {
+    if (!isSubset(s, a)) {
+        return [...s];
+    }
+    const out = [...s];
+    for (const e of a) {
+        out.splice(out.indexOf(e), 1);
+    }
+    return out;
 }
 
 export function calc(tiles: tilest[]) {
@@ -46,118 +92,68 @@ export function calc(tiles: tilest[]) {
         .map((n) => n % 3)
         .sort()
         .join("");
-
-    const sved: tilest[][] = [];
-    const tosv: tilest[][] = [];
-
+    const slv: tilest[][] = [];
     // const chit: tilest[][] = [];
 
     if (rem === "00001" || rem === "00022") {
         for (const t of [man, pin, sou, kaz, sgn]) {
-            if (t.length % 3 == 0) {
-                sved.push(t.sort((a, b) => TILE_O[a] - TILE_O[b]));
-            } else {
-                tosv.push(t.sort((a, b) => TILE_O[a] - TILE_O[b]));
-            }
+            slv.push(t.sort((a, b) => TILE_O[a] - TILE_O[b]));
         }
     } else {
         out.length = 0;
     }
 
     // console.log(man, pin, sou, kaz, sgn);
-    // console.log(sved, tosv, out);
+    //console.log(sved, tosv, out);
     // console.log(man.length, pin.length, sou.length, kaz.length, sgn.length);
-
-    const clear: boolean[] = [];
+    const clr: boolean[] = [];
     let k = 0;
-
-    const queue: tilest[][] = [];
-    const qyxz: tilest[] = ["0x"];
-    for (const sv of sved) {
-        queue.push(sv);
-        queue.push(qyxz);
-
-        let state = false;
-
-        while (queue.length > 0) {
-            const target = queue.shift() ?? [];
-
-            if (target.length == 1 && target === qyxz) {
-                if (queue.length > 0) {
-                    queue.splice(0, queue.length, ...rmDups(queue));
-                    queue.push(qyxz);
-                    continue;
-                } else {
-                    break;
-                }
-            } else if (target.length == 0) {
-                state = true;
-                continue;
-            } else {
-                // shuntsu
-                for (const t of target) {
-                    k++;
-                    if (TILE_N[t] > 0) {
-                        const sub = [...target];
-                        const t0 = sub.find((s) => TILE_N[s] == TILE_N[t]) ?? "0x";
-                        const t1 = sub.find((s) => TILE_N[s] == TILE_N[t] + 1) ?? "0x";
-                        const t2 = sub.find((s) => TILE_N[s] == TILE_N[t] + 2) ?? "0x";
-                        if (isSubset(sub, [t0, t1, t2])) {
-                            sub.splice(sub.indexOf(t0), 1);
-                            sub.splice(sub.indexOf(t1), 1);
-                            sub.splice(sub.indexOf(t2), 1);
-                            queue.push(sub);
-                        }
-                    }
-                }
-                // koutsu
-                for (const t of target) {
-                    k++;
-                    const sub = [...target];
-                    const t0 = sub.find((s) => TILE_N[s] == TILE_N[t]) ?? "0x";
-                    if (isSubset(sub, [t0, t0, t0])) {
-                        sub.splice(sub.indexOf(t0), 1);
-                        sub.splice(sub.indexOf(t0), 1);
-                        sub.splice(sub.indexOf(t0), 1);
-                        queue.push(sub);
-                    }
-                }
-            }
-        }
-        clear.push(state);
-    }
-
+    const que: tilest[][] = [];
+    const qyx: tilest[] = ["0x"];
+    const matcht = (t: tilest) => TILE_N[t];
     const part: tilest[][] = [];
-    for (const sv of tosv) {
-        queue.push(sv);
-        queue.push(qyxz);
-
-        while (queue.length > 0) {
-            const target = queue.shift() ?? [];
-
-            if (target.length == 1 && target === qyxz) {
-                if (queue.length > 0) {
-                    queue.splice(0, queue.length, ...rmDups(queue));
-                    queue.push(qyxz);
+    for (const sv of slv) {
+        que.length = 0;
+        que.push(sv);
+        que.push(qyx);
+        let state = false;
+        while (que.length > 0) {
+            const tar = que.shift() ?? [];
+            if (tar.length == 1 && tar === qyx) {
+                if (que.length > 0) {
+                    que.splice(0, que.length, ...delDups(que));
+                    que.push(qyx);
                     continue;
                 } else {
                     break;
                 }
-            } else if (target.length == 1) {
-                part.push(target);
+            } else if (tar.length == 1) {
+                state = true;
+                part.push(tar);
                 continue;
-            } else if (target.length == 2) {
-                part.push(target);
-                continue;
-            } else {
-                if (target.length == 4) {
-                    part.push(target);
+            } else if (tar.length == 2) {
+                if (tar.length != 2 || TILE_N[tar[1]] - TILE_N[tar[0]] < 3) {
+                    state = true;
+                    part.push(tar);
                 }
-                // shuntsu
-                for (const t of target) {
+                continue;
+            } else if (tar.length == 0) {
+                state = true;
+                break;
+            } else {
+                if (tar.length == 4) {
+                    const has = hasDups(tar, matcht);
+                    const mat = matDups(tar, matcht);
+                    if (has && (mat.length != 2 || TILE_N[mat[1]] - TILE_N[mat[0]] < 3)) {
+                        state = true;
+                        part.push(tar);
+                    }
+                } // shuntsu
+                for (const t of tar) {
                     k++;
                     if (TILE_N[t] > 0) {
-                        const sub = [...target];
+                        // not jih
+                        const sub = [...tar];
                         const t0 = sub.find((s) => TILE_N[s] == TILE_N[t]) ?? "0x";
                         const t1 = sub.find((s) => TILE_N[s] == TILE_N[t] + 1) ?? "0x";
                         const t2 = sub.find((s) => TILE_N[s] == TILE_N[t] + 2) ?? "0x";
@@ -165,96 +161,37 @@ export function calc(tiles: tilest[]) {
                             sub.splice(sub.indexOf(t0), 1);
                             sub.splice(sub.indexOf(t1), 1);
                             sub.splice(sub.indexOf(t2), 1);
-                            queue.push(sub);
+                            que.push(sub);
                         }
                     }
-                }
-                // koutsu
-                for (const t of target) {
+                } // koutsu
+                for (const t of tar) {
                     k++;
-                    const sub = [...target];
+                    const sub = [...tar];
                     const t0 = sub.find((s) => TILE_N[s] == TILE_N[t]) ?? "0x";
                     if (isSubset(sub, [t0, t0, t0])) {
                         sub.splice(sub.indexOf(t0), 1);
                         sub.splice(sub.indexOf(t0), 1);
                         sub.splice(sub.indexOf(t0), 1);
-                        queue.push(sub);
+                        que.push(sub);
                     }
                 }
             }
         }
+        clr.push(state);
     }
 
-    console.log(clear, k);
-    console.log(part);
+    const tato: tilest[][] = [];
+    // length 4  // add one tile  // do remove algorithm  // if remain tile is toitsu  // tile is valid
+    console.log(clr, k);
+    for (const p of part) {
+        const met = matDups(p, matcht);
+        console.log(p, p.length, "=>", subtract(p, met), "+", met, met.length);
+    }
+    if (rem === "00001") {
+        // 4 -> 2/2 (rym/pen/kan)    // 4 -> 4/0 (shp)    // 1 -> 1 (tan)
+    } else if (rem === "00022") {
+        const toitsu: tilest[][][] = [[], [], [], [], []];
+        const proto: tilest[][][] = [[], [], [], [], []];
+    }
 }
-
-// 13      10     7     4    1
-// 3333 1  333 1  33 1  3 1   1
-// 333 22  33 22  3 22   22
-
-// 12      9      6     3
-// 3333    333    33    3
-
-// 11      8      5     2
-// 333 2   33 2   3 2    2
-
-// 13 0 0 0
-// 12 1 0 0
-// 12 0 0 1
-// 11 2 0 0
-// 11 0 0 2
-// 10 3 0 0
-// 10 0 0 3
-// 9 4 0 0
-// 9 3 1 0
-// 9 3 0 1
-// 9 2 2 0
-// 9 2 0 2
-// 9 1 0 3
-// 9 0 0 4
-// 8 5 0 0
-// 8 3 2 0
-// 8 3 0 2
-// 8 2 0 3
-// 8 0 0 5
-// 7 6 0 0
-// 7 3 3 0
-// 7 3 0 3
-// 7 0 0 6
-// 6 6 1 0
-// 6 6 0 1
-// 6 5 2 0
-// 6 5 0 2
-// 6 4 3 0
-// 6 4 0 3
-// 6 3 3 1
-// 6 3 2 2
-// 6 3 1 3
-// 6 3 0 4
-// 6 2 2 3
-// 6 2 0 5
-// 6 1 0 6
-// 6 0 0 7
-// 5 5 3 0
-// 5 5 0 3
-// 5 3 3 2
-// 5 3 2 3
-// 5 3 0 5
-// 5 2 0 6
-// 5 0 0 8
-// 4 3 3 3
-// 4 3 0 6
-// 4 0 0 9
-// 3 3 3 4
-// 3 3 2 5
-// 3 3 1 6
-// 3 3 0 7
-// 3 2 2 6
-// 3 2 0 8
-// 3 1 0 9
-// 3 0 0 10
-// 2 2 0 9
-// 2 0 0 11
-// 1 0 0 12
-// 0 0 0 13
