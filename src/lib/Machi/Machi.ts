@@ -1,5 +1,5 @@
-import { kazet, manzut, pinzut, sangent, souzut, TILE_G, TILE_N, TILE_O, tilest, zihait } from "@/lib/Tile";
-import { isSubset } from "@/utility";
+import { kazet, manzut, pinzut, sangent, souzut, TILE_G, TILE_N, TILE_O, tilest } from "@/lib/Tile";
+import { isSubset, subtract, delDups, hasDups, matDups } from "@/utility";
 
 type machi = "rml" | "rmr" | "shp" | "kan" | "pn3" | "pn7" | "tan";
 
@@ -9,52 +9,6 @@ type zihv = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 interface tenpai {
     tile: tilest;
     machi: machi;
-}
-
-export function delDups<T>(arr: T[], cond: (e: T) => T | string | number = (e) => JSON.stringify(e)): T[] {
-    const set: Set<T | string | number> = new Set();
-    const out: T[] = [];
-    for (const e of arr) {
-        const c = cond(e);
-        if (!set.has(c)) {
-            set.add(c);
-            out.push(e);
-        }
-    }
-    return out;
-}
-export function hasDups<T>(arr: T[], cond: (e: T) => T | string | number = (e) => JSON.stringify(e)): boolean {
-    const set = new Set<T | string | number>();
-    for (const e of arr) {
-        const c = cond(e);
-        if (set.has(c)) {
-            return true;
-        }
-        set.add(c);
-    }
-    return false;
-}
-export function matDups<T>(arr: T[], cond: (e: T) => T | string | number = (e) => JSON.stringify(e)): T[] {
-    const map = new Map<T | string | number, number>();
-    const out: T[] = [];
-    for (const e of arr) {
-        const c = cond(e);
-        if (!map.has(c)) {
-            out.push(e);
-        }
-        map.set(c, (map.get(c) ?? 0) + 1);
-    }
-    return out.filter((e) => (map.get(cond(e)) ?? 0) % 2 !== 0);
-}
-export function subtract<T>(s: T[], a: T[]) {
-    if (!isSubset(s, a)) {
-        return [...s];
-    }
-    const out = [...s];
-    for (const e of a) {
-        out.splice(out.indexOf(e), 1);
-    }
-    return out;
 }
 
 export function calc(tiles: tilest[]) {
