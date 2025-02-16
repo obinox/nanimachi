@@ -136,7 +136,6 @@ export function calc(tiles: tilest[]) {
         clr.push(state);
     }
 
-    const tato: tilest[][] = [];
     // length 4  // add one tile  // do remove algorithm  // if remain tile is toitsu  // tile is valid
     for (const p of part) {
         const met = matDups(p, matcht);
