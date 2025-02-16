@@ -1,6 +1,6 @@
-import { MAN, PIN, SOU, TILE, TILE_O, tilest, YAOCHUU, ZIH } from "@/lib/Tile";
+import { TILE_O, tilest, YAOCHUU } from "@/lib/Tile";
 import { DEFAULT_TILESET, TILE_N } from "@/lib/Tile";
-import { possibility } from "@/lib/enums";
+import { possibility } from "@/lib/Enums";
 import { isSubset, randInt } from "@/utility";
 import { calc } from "@/lib/Machi";
 

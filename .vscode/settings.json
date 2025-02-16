@@ -1,7 +1,5 @@
 {
-    "cSpell.words": [
-        "chii",
-        "Pais"
-    ],
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "cSpell.words": ["chii", "Pais"],
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "javascript.preferences.importModuleSpecifier": "non-relative"
 }

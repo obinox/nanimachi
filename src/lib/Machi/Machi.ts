@@ -1,5 +1,6 @@
 import { kazet, manzut, pinzut, sangent, souzut, TILE_G, TILE_N, TILE_O, tilest } from "@/lib/Tile";
 import { isSubset, subtract, delDups, hasDups, matDups } from "@/utility";
+import { SHUNTSU } from "@/lib/Enums";
 
 type machi = "rml" | "rmr" | "shp" | "kan" | "pn3" | "pn7" | "tan";
 
@@ -18,7 +19,7 @@ export function calc(tiles: tilest[]) {
     const kaz: kazet[] = [];
     const sgn: sangent[] = [];
 
-    const out: tilest[] = [];
+    const out: tenpai[] = [];
 
     for (const t of tiles) {
         switch (TILE_G[t]) {
@@ -137,15 +138,34 @@ export function calc(tiles: tilest[]) {
 
     const tato: tilest[][] = [];
     // length 4  // add one tile  // do remove algorithm  // if remain tile is toitsu  // tile is valid
-    console.log(clr, k);
     for (const p of part) {
         const met = matDups(p, matcht);
         console.log(p, p.length, "=>", subtract(p, met), "+", met, met.length);
     }
     if (rem === "00001") {
         // 4 -> 2/2 (rym/pen/kan)    // 4 -> 4/0 (shp)    // 1 -> 1 (tan)
+        for (const p of part) {
+            if (p.length == 1) {
+                out.push({ tile: p[0], machi: "tan" });
+            } else if (p.length == 4) {
+                const met = matDups(p, matcht);
+                if (met.length == 2) {
+                    console.log(
+                        Object.values(SHUNTSU)
+                            .filter((e) => isSubset(e, met))
+                            .map((e) => subtract(e, met)[0])
+                    );
+                } else if (met.length == 0) {
+                    out.push({ tile: p[0], machi: "shp" });
+                    out.push({ tile: p[2], machi: "shp" });
+                }
+            }
+        }
     } else if (rem === "00022") {
         const toitsu: tilest[][][] = [[], [], [], [], []];
-        const proto: tilest[][][] = [[], [], [], [], []];
+        const kata: tilest[][][] = [[], [], [], [], []];
+    }
+    for (const o of out) {
+        console.log(o.tile, o.machi);
     }
 }

@@ -1,1 +1,1 @@
-export { SHUNTSU, KOUTSU, KANTSU, TOITSU, possibility } from "@/lib/enums/Mentsu";
+export { SHUNTSU, KOUTSU, KANTSU, TOITSU, possibility } from "@/lib/Enums/Mentsu";

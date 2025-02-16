@@ -1,6 +1,6 @@
 import { Chii, Kang, Pong, Stile } from "@/components/Tile";
 import { tilest } from "@/lib/Tile";
-import { SHUNTSU, KANTSU, KOUTSU } from "@/lib/enums";
+import { SHUNTSU, KANTSU, KOUTSU } from "@/lib/Enums";
 import { vtok } from "@/utility";
 
 export function Tiles({ tiles, agaru, agarus, fuuro, fsidx }: { tiles: tilest[]; agaru?: tilest; agarus?: tilest[]; fuuro?: tilest[][]; fsidx?: number[] }) {

@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export const T_WIDTH = 45;
 export const T_HEIGHT = 65;
-export const T_COEF = 1.5;
+export const T_COEF = 1.5 * 0.8;
 
 export function Stile({ tile, turned = false }: { tile: tilest | string; turned?: boolean }) {
     if (!isTile(tile)) {

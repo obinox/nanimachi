@@ -1,5 +1,5 @@
 import { tilest } from "@/lib/Tile";
-import { KANTSU, KOUTSU, SHUNTSU } from "@/lib/enums";
+import { KANTSU, KOUTSU, SHUNTSU } from "@/lib/Enums";
 import { Stile, Dtile } from "@/components/Tile";
 
 export function Chii({ tile, fidx = 0 }: { tile: tilest; fidx?: number }) {
