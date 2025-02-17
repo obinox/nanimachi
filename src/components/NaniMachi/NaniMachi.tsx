@@ -1,9 +1,12 @@
 import { Stile, Tiles, Dtile, Format } from "@/components/Tile";
 import { Akang, Chii, Dkang, Pong, Skang } from "@/components/Tile";
-import { RDBlocks, FlatRDB, FormatRDTsumo, MANZU_ISOU, PINZU_ISOU, SOUZU_ISOU } from "@/lib/Tile";
+import { calc } from "@/lib/Machi";
+import { RDBlocks, FlatRDB, FormatRDTsumo, MANZU_ISOU, PINZU_ISOU, SOUZU_ISOU, tilest } from "@/lib/Tile";
 
 export function NaniMachi() {
-    const a = RDBlocks();
+    const a: tilest[] = ["4m", "5m", "5m", "6m", "6m", "3p", "4p", "5p", "1z", "1z", "3z", "3z", "3z"];
+    // console.log(calc(a));
+
     return (
         <>
             <Tiles {...FormatRDTsumo(RDBlocks(MANZU_ISOU))}></Tiles>

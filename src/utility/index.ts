@@ -1,4 +1,5 @@
-export { isSubset, subtract, delDups, hasDups, matDups } from "./set";
-export { randInt } from "./rand";
-export { vtok } from "./keyvalue";
-export type { rdonly } from "./readonly";
+export { isSubset, subtract, delDups, hasDups, matDups } from "@/utility/set";
+export { randInt } from "@/utility/rand";
+export { vtok } from "@/utility/keyvalue";
+export type { rdonly } from "@/utility/readonly";
+export { tilesort, tilecomp } from "@/utility/nekouwu";

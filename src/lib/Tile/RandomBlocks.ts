@@ -1,7 +1,6 @@
-import { TILE_O, tilest, YAOCHUU } from "@/lib/Tile";
-import { DEFAULT_TILESET, TILE_N } from "@/lib/Tile";
+import { DEFAULT_TILESET, TILE_N, tilest, YAOCHUU } from "@/lib/Tile";
 import { possibility } from "@/lib/Enums";
-import { isSubset, randInt } from "@/utility";
+import { delDups, isSubset, randInt, tilesort } from "@/utility";
 import { calc } from "@/lib/Machi";
 
 type mentsutype = "shuntsu" | "koutsu" | "kantsu";
@@ -27,7 +26,7 @@ export function RDBlocks(tileset = DEFAULT_TILESET) {
     const fuuro: tilest[][] = [];
 
     const alter = randInt(0, 10000);
-    if (alter < W_KOKUSHI) {
+    if (alter < W_KOKUSHI && isSubset(yama, YAOCHUU)) {
         const mtsu: tilest[] = [];
         for (const y of YAOCHUU) {
             mtsu.push(y);
@@ -141,7 +140,7 @@ export function FlatRDB({ mtsus, fuuro }: { mtsus: tilest[][]; fuuro: tilest[][]
     for (const m of mtsus) {
         tiles.push(...m);
     }
-    tiles.sort((a, b) => TILE_O[a] - TILE_O[b]);
+    tiles.sort(tilesort);
     for (const m of fuuro) {
         tiles.push(...m);
     }
@@ -153,7 +152,7 @@ export function Format({ mtsus, fuuro }: { mtsus: tilest[][]; fuuro: tilest[][] 
     for (const m of mtsus) {
         tiles.push(...m);
     }
-    tiles.sort((a, b) => TILE_O[a] - TILE_O[b]);
+    tiles.sort(tilesort);
 
     const fsidx: number[] = [];
     for (let i = 0; i < fuuro.length; i++) {
@@ -168,7 +167,7 @@ export function FormatRDTsumo({ mtsus, fuuro }: { mtsus: tilest[][]; fuuro: tile
     for (const m of mtsus) {
         tiles.push(...m);
     }
-    tiles.sort((a, b) => TILE_O[a] - TILE_O[b]);
+    tiles.sort(tilesort);
 
     const idx = randInt(0, tiles.length);
     const agaru = tiles[idx];
@@ -180,24 +179,26 @@ export function FormatRDTsumo({ mtsus, fuuro }: { mtsus: tilest[][]; fuuro: tile
         fsidx.push(randInt(0, 8));
     }
 
-    console.log(calc(tiles));
+    const agarus: tilest[] = delDups(calc(tiles).map((e) => e.tile)).sort(tilesort);
 
-    return { tiles, fuuro, agaru, fsidx };
+    return { tiles, fuuro, agaru, agarus, fsidx };
 }
 
-// TILE.forEach((e) => {
-//     const a = Object.entries(SHUNTSU)
-//         .filter(([key, shun]) => {
-//             return shun.includes(e);
-//         })
-//         .map(([key, shun]) => {
-//             return shun;
-//         });
-//     possibility[e].shuntsu.push(...a);
-//     possibility[e].toitsu.push(TOITSU[e]);
-//     possibility[e].koutsu.push(KOUTSU[e]);
-//     possibility[e].kantsu.push(KANTSU[e]);
-// });
-// console.log(possibility);
+/**
+TILE.forEach((e) => {
+    const a = Object.entries(SHUNTSU)
+        .filter(([key, shun]) => {
+            return shun.includes(e);
+        })
+        .map(([key, shun]) => {
+            return shun;
+        });
+    possibility[e].shuntsu.push(...a);
+    possibility[e].toitsu.push(TOITSU[e]);
+    possibility[e].koutsu.push(KOUTSU[e]);
+    possibility[e].kantsu.push(KANTSU[e]);
+});
+console.log(possibility);
 
-// return ["0x"];
+return ["0x"];
+ */

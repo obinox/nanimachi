@@ -1,11 +1,8 @@
-import { kazet, manzut, pinzut, sangent, souzut, TILE_G, TILE_N, TILE_O, tilest } from "@/lib/Tile";
-import { isSubset, subtract, delDups, hasDups, matDups } from "@/utility";
-import { SHUNTSU } from "@/lib/Enums";
+import { TILE_G, TILE_N, TILE_O, tilest, YAOCHUU } from "@/lib/Tile";
+import { isSubset, subtract, delDups, hasDups, matDups, tilecomp, tilesort } from "@/utility";
+import { KOUTSU, SHUNTSU, TOITSU } from "@/lib/Enums";
 
-type machi = "rml" | "rmr" | "shp" | "kan" | "pn3" | "pn7" | "tan";
-
-type shpv = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-type zihv = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+type machi = "rml" | "rmr" | "shp" | "kan" | "pn3" | "pn7" | "tan" | "chi" | "kmu" | "k13";
 
 interface tenpai {
     tile: tilest;
@@ -13,158 +10,176 @@ interface tenpai {
 }
 
 export function calc(tiles: tilest[]) {
-    const man: manzut[] = [];
-    const pin: pinzut[] = [];
-    const sou: souzut[] = [];
-    const kaz: kazet[] = [];
-    const sgn: sangent[] = [];
-
+    console.log(...tiles);
+    const grp: tilest[][] = [[], [], [], [], []];
     const out: tenpai[] = [];
 
     for (const t of tiles) {
-        switch (TILE_G[t]) {
-            case 0:
-                man.push(<manzut>t);
-                break;
-            case 1:
-                pin.push(<pinzut>t);
-                break;
-            case 2:
-                sou.push(<souzut>t);
-                break;
-            case 3:
-                kaz.push(<kazet>t);
-                break;
-            case 4:
-                sgn.push(<sangent>t);
-                break;
-            default:
-                break;
-        }
+        grp[TILE_G[t]].push(t);
     }
 
-    const rem: string = [man.length, pin.length, sou.length, kaz.length, sgn.length]
-        .map((n) => n % 3)
+    const rem: string = grp
+        .map((n) => n.length % 3)
         .sort()
         .join("");
     const slv: tilest[][] = [];
-    // const chit: tilest[][] = [];
-
     if (rem === "00001" || rem === "00022") {
-        for (const t of [man, pin, sou, kaz, sgn]) {
+        for (const t of grp) {
             slv.push(t.sort((a, b) => TILE_O[a] - TILE_O[b]));
+        }
+        const clr: boolean[] = [];
+        const que: tilest[][] = [];
+        const end: tilest[] = ["0x"];
+
+        const part: tilest[][] = [];
+        for (const sv of slv) {
+            que.length = 0;
+            que.push(sv);
+            que.push(end);
+            let state = false;
+            while (que.length > 0) {
+                const tar = que.shift() ?? [];
+                if (tar.length == 1 && tar === end) {
+                    if (que.length > 0) {
+                        que.splice(0, que.length, ...delDups(que));
+                        que.push(end);
+                        continue;
+                    } else {
+                        break;
+                    }
+                } else if (tar.length == 1) {
+                    state = true;
+                    part.push(tar);
+                    continue;
+                } else if (tar.length == 2) {
+                    if (tar.length != 2 || TILE_N[tar[1]] - TILE_N[tar[0]] < 3) {
+                        state = true;
+                        part.push(tar);
+                    }
+                    continue;
+                } else if (tar.length == 0) {
+                    state = true;
+                    break;
+                } else {
+                    if (tar.length == 4) {
+                        const has = hasDups(tar, tilecomp);
+                        const mat = matDups(tar, tilecomp);
+                        if (has && (mat.length != 2 || TILE_N[mat[1]] - TILE_N[mat[0]] < 3)) {
+                            state = true;
+                            part.push(tar);
+                        }
+                    }
+                    for (const t of tar) {
+                        if (TILE_G[t] < 3) {
+                            const sub = [...tar];
+                            const t0 = sub.find((s) => TILE_N[s] == TILE_N[t]) ?? "0x";
+                            const t1 = sub.find((s) => TILE_N[s] == TILE_N[t] + 1) ?? "0x";
+                            const t2 = sub.find((s) => TILE_N[s] == TILE_N[t] + 2) ?? "0x";
+                            if (isSubset(sub, [t0, t1, t2])) {
+                                sub.splice(sub.indexOf(t0), 1);
+                                sub.splice(sub.indexOf(t1), 1);
+                                sub.splice(sub.indexOf(t2), 1);
+                                que.push(sub);
+                            }
+                        }
+                    }
+                    for (const t of tar) {
+                        const sub = [...tar];
+                        const t0 = sub.find((s) => TILE_N[s] == TILE_N[t]) ?? "0x";
+                        if (isSubset(sub, [t0, t0, t0])) {
+                            sub.splice(sub.indexOf(t0), 1);
+                            sub.splice(sub.indexOf(t0), 1);
+                            sub.splice(sub.indexOf(t0), 1);
+                            que.push(sub);
+                        }
+                    }
+                }
+            }
+            clr.push(state);
+        }
+
+        if (rem === "00022") {
+            const tmp: tilest[][] = [];
+            for (const t of part.filter((e) => hasDups(e, tilecomp))) {
+                for (const s of part.filter((e) => TILE_G[e[0]] != TILE_G[t[0]])) {
+                    tmp.push([...t, ...s].sort(tilesort));
+                }
+            }
+            part.splice(0, part.length, ...delDups(tmp));
+        }
+
+        for (const p of part) {
+            const mat = matDups(p, tilecomp);
+            console.log(p, p.length, "=>", subtract(p, mat), "+", mat, mat.length);
+        }
+
+        for (const p of part) {
+            if (p.length == 1) {
+                for (const t of Object.values(TOITSU).filter((e) => isSubset(e, p))) {
+                    const sub = subtract(t, p)[0];
+                    out.push({ tile: sub, machi: "tan" });
+                }
+            } else if (p.length == 4) {
+                const mat = matDups(p, tilecomp);
+                if (mat.length == 2) {
+                    for (const t of Object.values(SHUNTSU).filter((e) => isSubset(e, mat))) {
+                        const s = subtract(t, mat)[0];
+                        const cmp = TILE_N[s] * 2 - (TILE_N[mat[0]] + TILE_N[mat[1]]);
+                        if (cmp > 0) {
+                            if (TILE_N[s] == 3) out.push({ tile: s, machi: "pn3" });
+                            else out.push({ tile: s, machi: "rmr" });
+                        }
+                        if (cmp < 0) {
+                            if (TILE_N[s] == 7) out.push({ tile: s, machi: "pn7" });
+                            else out.push({ tile: s, machi: "rml" });
+                        }
+                        if (cmp == 0) out.push({ tile: s, machi: "kan" });
+                    }
+                } else if (mat.length == 0) {
+                    const mae = p.slice(0, 2);
+                    for (const t of Object.values(KOUTSU).filter((e) => isSubset(e, mae))) {
+                        const sub = subtract(t, mae)[0];
+                        out.push({ tile: sub, machi: "shp" });
+                    }
+                    const usr = p.slice(2, 4);
+                    for (const t of Object.values(KOUTSU).filter((e) => isSubset(e, usr))) {
+                        const sub = subtract(t, usr)[0];
+                        out.push({ tile: sub, machi: "shp" });
+                    }
+                }
+            }
         }
     } else {
         out.length = 0;
     }
 
-    // console.log(man, pin, sou, kaz, sgn);
-    //console.log(sved, tosv, out);
-    // console.log(man.length, pin.length, sou.length, kaz.length, sgn.length);
-    const clr: boolean[] = [];
-    let k = 0;
-    const que: tilest[][] = [];
-    const qyx: tilest[] = ["0x"];
-    const matcht = (t: tilest) => TILE_N[t];
-    const part: tilest[][] = [];
-    for (const sv of slv) {
-        que.length = 0;
-        que.push(sv);
-        que.push(qyx);
-        let state = false;
-        while (que.length > 0) {
-            const tar = que.shift() ?? [];
-            if (tar.length == 1 && tar === qyx) {
-                if (que.length > 0) {
-                    que.splice(0, que.length, ...delDups(que));
-                    que.push(qyx);
-                    continue;
-                } else {
-                    break;
-                }
-            } else if (tar.length == 1) {
-                state = true;
-                part.push(tar);
-                continue;
-            } else if (tar.length == 2) {
-                if (tar.length != 2 || TILE_N[tar[1]] - TILE_N[tar[0]] < 3) {
-                    state = true;
-                    part.push(tar);
-                }
-                continue;
-            } else if (tar.length == 0) {
-                state = true;
-                break;
-            } else {
-                if (tar.length == 4) {
-                    const has = hasDups(tar, matcht);
-                    const mat = matDups(tar, matcht);
-                    if (has && (mat.length != 2 || TILE_N[mat[1]] - TILE_N[mat[0]] < 3)) {
-                        state = true;
-                        part.push(tar);
-                    }
-                } // shuntsu
-                for (const t of tar) {
-                    k++;
-                    if (TILE_N[t] > 0) {
-                        // not jih
-                        const sub = [...tar];
-                        const t0 = sub.find((s) => TILE_N[s] == TILE_N[t]) ?? "0x";
-                        const t1 = sub.find((s) => TILE_N[s] == TILE_N[t] + 1) ?? "0x";
-                        const t2 = sub.find((s) => TILE_N[s] == TILE_N[t] + 2) ?? "0x";
-                        if (isSubset(sub, [t0, t1, t2])) {
-                            sub.splice(sub.indexOf(t0), 1);
-                            sub.splice(sub.indexOf(t1), 1);
-                            sub.splice(sub.indexOf(t2), 1);
-                            que.push(sub);
-                        }
-                    }
-                } // koutsu
-                for (const t of tar) {
-                    k++;
-                    const sub = [...tar];
-                    const t0 = sub.find((s) => TILE_N[s] == TILE_N[t]) ?? "0x";
-                    if (isSubset(sub, [t0, t0, t0])) {
-                        sub.splice(sub.indexOf(t0), 1);
-                        sub.splice(sub.indexOf(t0), 1);
-                        sub.splice(sub.indexOf(t0), 1);
-                        que.push(sub);
-                    }
-                }
-            }
+    const chit: tilest[] = [...tiles];
+    if (matDups(chit, tilecomp).length == 1 && delDups(chit, tilecomp).length == 7) {
+        const mat = matDups(chit);
+        for (const t of Object.values(TOITSU).filter((e) => isSubset(e, mat))) {
+            const sub = subtract(t, mat)[0];
+            out.push({ tile: sub, machi: "chi" });
         }
-        clr.push(state);
     }
 
-    // length 4  // add one tile  // do remove algorithm  // if remain tile is toitsu  // tile is valid
-    for (const p of part) {
-        const met = matDups(p, matcht);
-        console.log(p, p.length, "=>", subtract(p, met), "+", met, met.length);
-    }
-    if (rem === "00001") {
-        // 4 -> 2/2 (rym/pen/kan)    // 4 -> 4/0 (shp)    // 1 -> 1 (tan)
-        for (const p of part) {
-            if (p.length == 1) {
-                out.push({ tile: p[0], machi: "tan" });
-            } else if (p.length == 4) {
-                const met = matDups(p, matcht);
-                if (met.length == 2) {
-                    console.log(
-                        Object.values(SHUNTSU)
-                            .filter((e) => isSubset(e, met))
-                            .map((e) => subtract(e, met)[0])
-                    );
-                } else if (met.length == 0) {
-                    out.push({ tile: p[0], machi: "shp" });
-                    out.push({ tile: p[2], machi: "shp" });
-                }
+    if (out.length == 0) {
+        const del = delDups(chit, tilecomp);
+        if (isSubset(YAOCHUU, del)) {
+            switch (del.length) {
+                case 12:
+                    out.push({ tile: subtract(YAOCHUU, del)[0], machi: "kmu" });
+                    break;
+                case 13:
+                    for (const y of YAOCHUU) {
+                        out.push({ tile: y, machi: "k13" });
+                    }
+                    break;
+                default:
+                    break;
             }
         }
-    } else if (rem === "00022") {
-        const toitsu: tilest[][][] = [[], [], [], [], []];
-        const kata: tilest[][][] = [[], [], [], [], []];
     }
-    for (const o of out) {
-        console.log(o.tile, o.machi);
-    }
+
+    console.log(...out);
+    return out;
 }
