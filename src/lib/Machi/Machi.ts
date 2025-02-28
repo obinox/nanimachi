@@ -2,9 +2,9 @@ import { TILE_G, TILE_N, TILE_O, tilest, YAOCHUU } from "@/lib/Tile";
 import { isSubset, subtract, delDups, hasDups, matDups, tilecomp, tilesort } from "@/utility";
 import { KOUTSU, SHUNTSU, TOITSU } from "@/lib/Enums";
 
-type machi = "rml" | "rmr" | "shp" | "kan" | "pn3" | "pn7" | "tan" | "chi" | "kmu" | "k13";
+export type machi = "rml" | "rmr" | "shp" | "kan" | "pn3" | "pn7" | "tan" | "chi" | "kmu" | "k13";
 
-interface tenpai {
+export interface tenpai {
     tile: tilest;
     machi: machi;
 }
@@ -13,6 +13,7 @@ export function calc(tiles: tilest[]) {
     console.log(...tiles);
     const grp: tilest[][] = [[], [], [], [], []];
     const out: tenpai[] = [];
+    const clr: boolean[] = [];
 
     for (const t of tiles) {
         grp[TILE_G[t]].push(t);
@@ -25,9 +26,8 @@ export function calc(tiles: tilest[]) {
     const slv: tilest[][] = [];
     if (rem === "00001" || rem === "00022") {
         for (const t of grp) {
-            slv.push(t.sort((a, b) => TILE_O[a] - TILE_O[b]));
+            slv.push(t.sort(tilesort));
         }
-        const clr: boolean[] = [];
         const que: tilest[][] = [];
         const end: tilest[] = ["0x"];
 
@@ -69,6 +69,8 @@ export function calc(tiles: tilest[]) {
                             part.push(tar);
                         }
                     }
+                    console.log(...Object.values(SHUNTSU).filter((a) => isSubset(tar, a)));
+                    console.log(...Object.values(KOUTSU).filter((a) => isSubset(tar, a)));
                     for (const t of tar) {
                         if (TILE_G[t] < 3) {
                             const sub = [...tar];
@@ -85,11 +87,16 @@ export function calc(tiles: tilest[]) {
                     }
                     for (const t of tar) {
                         const sub = [...tar];
+                        let idx = 0;
                         const t0 = sub.find((s) => TILE_N[s] == TILE_N[t]) ?? "0x";
-                        if (isSubset(sub, [t0, t0, t0])) {
+                        idx = sub.findIndex((s) => TILE_N[s] == TILE_N[t]) ?? -1;
+                        const t1 = sub.find((s, i) => TILE_N[s] == TILE_N[t] && i > idx) ?? "0x";
+                        idx = sub.findIndex((s, i) => TILE_N[s] == TILE_N[t] && i > idx) ?? -1;
+                        const t2 = sub.find((s, i) => TILE_N[s] == TILE_N[t] && i > idx) ?? "0x";
+                        if (isSubset(sub, [t0, t1, t2])) {
                             sub.splice(sub.indexOf(t0), 1);
-                            sub.splice(sub.indexOf(t0), 1);
-                            sub.splice(sub.indexOf(t0), 1);
+                            sub.splice(sub.indexOf(t1), 1);
+                            sub.splice(sub.indexOf(t2), 1);
                             que.push(sub);
                         }
                     }
@@ -153,9 +160,15 @@ export function calc(tiles: tilest[]) {
         out.length = 0;
     }
 
+    if (clr.some((e) => !e)) {
+        out.length = 0;
+    }
+
+    console.log(clr);
+
     const chit: tilest[] = [...tiles];
     if (matDups(chit, tilecomp).length == 1 && delDups(chit, tilecomp).length == 7) {
-        const mat = matDups(chit);
+        const mat = matDups(chit, tilecomp);
         for (const t of Object.values(TOITSU).filter((e) => isSubset(e, mat))) {
             const sub = subtract(t, mat)[0];
             out.push({ tile: sub, machi: "chi" });
@@ -181,5 +194,5 @@ export function calc(tiles: tilest[]) {
     }
 
     console.log(...out);
-    return out;
+    return delDups(out).sort((a: tenpai, b: tenpai) => TILE_O[a.tile] - TILE_O[b.tile]);
 }

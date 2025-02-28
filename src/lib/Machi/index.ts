@@ -1,1 +1,1 @@
-export { calc } from "@/lib/Machi/Machi";
+export * from "@/lib/Machi/Machi";

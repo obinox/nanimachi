@@ -1,1 +1,1 @@
-export { Yaku } from "@/lib/Yakus/Yaku";
+export * from "@/lib/Yakus/Yaku";

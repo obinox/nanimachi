@@ -1,18 +1,17 @@
-import { DEFAULT_TILESET, TILE_N, tilest, YAOCHUU } from "@/lib/Tile";
+import { DEFAULT_TILESET, TILE_N, TILE_Z, tilest, YAOCHUU } from "@/lib/Tile";
 import { possibility } from "@/lib/Enums";
 import { delDups, isSubset, randInt, tilesort } from "@/utility";
 import { calc } from "@/lib/Machi";
 
 type mentsutype = "shuntsu" | "koutsu" | "kantsu";
 
-/* 
-shuntsu 4*4*2*133 
+/*
+shuntsu 4*4*2*133
     1 , 9 => *1
     2 , 8 => *2
     3 ~ 7 => *3
 koutsu 3*133
 kantsu 3
-
 chitiotsu 3%
 kokushi 0.04%
 */
@@ -55,7 +54,7 @@ export function RDBlocks(tileset = DEFAULT_TILESET) {
             const curt = yama[idx];
 
             let coef = 1;
-            switch (TILE_N[curt]) {
+            switch (TILE_N[curt] - TILE_Z[curt]) {
                 case 0:
                 case -1:
                     coef = 0;
@@ -178,10 +177,28 @@ export function FormatRDTsumo({ mtsus, fuuro }: { mtsus: tilest[][]; fuuro: tile
     for (let i = 0; i < fuuro.length; i++) {
         fsidx.push(randInt(0, 8));
     }
+    const tenpais = calc(tiles);
+    const agarus: tilest[] = delDups(tenpais.map((e) => e.tile)).sort(tilesort);
 
-    const agarus: tilest[] = delDups(calc(tiles).map((e) => e.tile)).sort(tilesort);
+    return { tiles, fuuro, agaru, agarus, fsidx, tenpais };
+}
 
-    return { tiles, fuuro, agaru, agarus, fsidx };
+export function FlatRDTsumo({ tiles, fuuro }: { tiles: tilest[]; fuuro: tilest[][] }) {
+    tiles.sort(tilesort);
+
+    const idx = randInt(0, tiles.length);
+    const agaru = tiles[idx];
+
+    tiles.splice(idx, 1);
+
+    const fsidx: number[] = [];
+    for (let i = 0; i < fuuro.length; i++) {
+        fsidx.push(randInt(0, 8));
+    }
+    const tenpais = calc(tiles);
+    const agarus: tilest[] = delDups(tenpais.map((e) => e.tile)).sort(tilesort);
+
+    return { tiles, fuuro, agaru, agarus, fsidx, tenpais };
 }
 
 /**
@@ -199,6 +216,5 @@ TILE.forEach((e) => {
     possibility[e].kantsu.push(KANTSU[e]);
 });
 console.log(possibility);
-
 return ["0x"];
  */

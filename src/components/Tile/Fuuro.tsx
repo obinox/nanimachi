@@ -14,7 +14,7 @@ export function Chii({ tile, fidx = 0 }: { tile: tilest; fidx?: number }) {
     tiles.splice(0, 0, ftile);
 
     return (
-        <div style={{ display: "inline-block" }}>
+        <div style={{ display: "flex" }}>
             {tiles.map((t, idx) => (
                 <Stile tile={t} turned={idx === 0} key={t + "$" + idx}></Stile>
             ))}
@@ -34,7 +34,7 @@ export function Pong({ tile, sidx = 0, omo = false }: { tile: tilest; sidx?: num
     tiles.splice(sidx, 0, ftile);
 
     return (
-        <div style={{ display: "inline-block" }}>
+        <div style={{ display: "flex" }}>
             {tiles.map((t, idx) => (
                 <Stile tile={t} turned={idx === sidx} key={t + "$" + idx}></Stile>
             ))}
@@ -50,7 +50,7 @@ export function Akang({ tile }: { tile: tilest }) {
     tiles.splice(3, 0, "0x");
 
     return (
-        <div style={{ display: "inline-block" }}>
+        <div style={{ display: "flex" }}>
             {tiles.map((t, idx) => (
                 <Stile tile={t} key={t + "$" + idx}></Stile>
             ))}
@@ -74,7 +74,7 @@ export function Dkang({ tile, sidx = 0, omo = false }: { tile: tilest; sidx?: nu
     tiles.splice(sidx, 0, ftile);
 
     return (
-        <div style={{ display: "inline-block" }}>
+        <div style={{ display: "flex" }}>
             {tiles.map((t, idx) => (
                 <Stile tile={t} turned={idx === sidx} key={t + "$" + idx}></Stile>
             ))}
@@ -94,7 +94,7 @@ export function Skang({ tile, sidx = 0, omo = false }: { tile: tilest; sidx?: nu
     tiles.splice(sidx, 0, ftile);
 
     return (
-        <div style={{ display: "inline-block" }}>
+        <div style={{ display: "flex" }}>
             {tiles.slice(0, 3).map((t, idx) => {
                 if (idx === sidx) {
                     return <Dtile dtile={t} utile={tiles[3]} key={t + "$" + idx}></Dtile>;

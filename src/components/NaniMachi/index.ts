@@ -1,1 +1,1 @@
-export { NaniMachi } from "./NaniMachi";
+export * from "./NaniMachi";

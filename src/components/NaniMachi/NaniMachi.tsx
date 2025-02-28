@@ -4,8 +4,8 @@ import { calc } from "@/lib/Machi";
 import { RDBlocks, FlatRDB, FormatRDTsumo, MANZU_ISOU, PINZU_ISOU, SOUZU_ISOU, tilest } from "@/lib/Tile";
 
 export function NaniMachi() {
-    const a: tilest[] = ["4m", "5m", "5m", "6m", "6m", "3p", "4p", "5p", "1z", "1z", "3z", "3z", "3z"];
-    // console.log(calc(a));
+    const a: tilest[] = "1m 2m 3m 3m 3m 0m 5m 5m 6m 6m 7m 8m 8m".split(" ");
+    console.log(calc(a));
 
     return (
         <>

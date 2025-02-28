@@ -3,15 +3,25 @@ import Image from "next/image";
 
 export const T_WIDTH = 45;
 export const T_HEIGHT = 65;
-export const T_COEF = 1.5 * 0.8;
+export const T_COEF = 1.5 * 0.7;
+export const T_RUBY = 9;
 
-export function Stile({ tile, turned = false }: { tile: tilest | string; turned?: boolean }) {
+export function Stile({ tile, turned = false, ruby = [] }: { tile: tilest | string; turned?: boolean; ruby?: string[] }) {
     if (!isTile(tile)) {
         tile = "0x";
     }
     return (
-        <div style={{ display: "inline-flex", position: "relative", width: "auto", height: T_WIDTH * T_COEF * 2, alignItems: "end" }}>
+        <div style={{ display: "inline-flex", position: "relative", width: "auto", height: T_WIDTH * T_COEF * 2, alignItems: "end", justifyContent: "center" }}>
             <Image src={`/img/tiles/${turned ? "t" : ""}${tile}.svg`} alt={turned ? "t" : "" + tile} width={(turned ? T_HEIGHT : T_WIDTH) * T_COEF} height={(turned ? T_WIDTH : T_HEIGHT) * T_COEF} priority></Image>
+            <ruby style={{ display: "flex", flexDirection: "column", position: "absolute", bottom: T_HEIGHT * T_COEF, textAlign: "center", alignItems: "center" }}>
+                {ruby.map((e: string, i: number) => {
+                    return (
+                        <rt key={i} style={{ display: "block", fontSize: T_RUBY * T_COEF, color: "white" }}>
+                            {e}
+                        </rt>
+                    );
+                })}
+            </ruby>
         </div>
     );
 }
