@@ -1,4 +1,4 @@
-import { Chii, Kang, Pong, Stile, T_COEF, T_HEIGHT } from "@/components/Tile";
+import { Chii, Kang, Pong, Stile, Rtile, T_COEF, T_HEIGHT } from "@/components/Tile";
 import { tilest } from "@/lib/Tile";
 import { SHUNTSU, KANTSU, KOUTSU } from "@/lib/Enums";
 import { delDups, vtok } from "@/utility";
@@ -28,7 +28,9 @@ export function Tiles({ tiles, agaru, agarus, fuuro, fsidx, tenpais }: { tiles: 
                     {agaru && "agaru: "}
                     {agaru && <Stile tile={agaru} key="agaru"></Stile>}
                     {agarus && "agarus: "}
-                    {agarus?.map((t, idx) => <Stile tile={t} key={idx} ruby={delDups(tenpais?.filter((e) => e.tile == t).map((e) => machiref[e.machi]) ?? [])}></Stile>)}
+                    {agarus?.map((t, idx) => (
+                        <Rtile tile={t} key={idx} ruby={delDups(tenpais?.filter((e) => e.tile == t).map((e) => machiref[e.machi]) ?? [])}></Rtile>
+                    ))}
                     {fuuro?.length ? "fuuro: " : ""}
                     {fuuro?.map((m, idx) => {
                         console.log("fuuro: ", m);

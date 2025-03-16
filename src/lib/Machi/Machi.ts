@@ -1,4 +1,4 @@
-import { TILE_G, TILE_N, TILE_O, tilest, YAOCHUU } from "@/lib/Tile";
+import { DEFAULT_TILESET, TILE_G, TILE_N, TILE_O, tilest, YAOCHUU } from "@/lib/Tile";
 import { isSubset, subtract, delDups, hasDups, matDups, tilecomp, tilesort } from "@/utility";
 import { KOUTSU, SHUNTSU, TOITSU } from "@/lib/Enums";
 
@@ -9,14 +9,21 @@ export interface tenpai {
     machi: machi;
 }
 
-export function calc(tiles: tilest[]) {
+export function calc(tiles: tilest[], fuuro: tilest[] = [], tileset = { ...DEFAULT_TILESET }) {
     console.log(...tiles);
+    const UUID = crypto.randomUUID();
+    console.time(UUID);
     const grp: tilest[][] = [[], [], [], [], []];
     const out: tenpai[] = [];
     const clr: boolean[] = [];
 
     for (const t of tiles) {
         grp[TILE_G[t]].push(t);
+        tileset[t]--;
+    }
+
+    for (const t of fuuro) {
+        tileset[t]--;
     }
 
     const rem: string = grp
@@ -69,8 +76,8 @@ export function calc(tiles: tilest[]) {
                             part.push(tar);
                         }
                     }
-                    console.log(...Object.values(SHUNTSU).filter((a) => isSubset(tar, a)));
-                    console.log(...Object.values(KOUTSU).filter((a) => isSubset(tar, a)));
+                    // console.log(...Object.values(SHUNTSU).filter((a) => isSubset(tar, a)));
+                    // console.log(...Object.values(KOUTSU).filter((a) => isSubset(tar, a)));
                     for (const t of tar) {
                         if (TILE_G[t] < 3) {
                             const sub = [...tar];
@@ -115,10 +122,10 @@ export function calc(tiles: tilest[]) {
             part.splice(0, part.length, ...delDups(tmp));
         }
 
-        for (const p of part) {
-            const mat = matDups(p, tilecomp);
-            console.log(p, p.length, "=>", subtract(p, mat), "+", mat, mat.length);
-        }
+        // for (const p of part) {
+        //     const mat = matDups(p, tilecomp);
+        //     console.log(p, p.length, "=>", subtract(p, mat), "+", mat, mat.length);
+        // }
 
         for (const p of part) {
             if (p.length == 1) {
@@ -164,7 +171,7 @@ export function calc(tiles: tilest[]) {
         out.length = 0;
     }
 
-    console.log(clr);
+    // console.log(clr);
 
     const chit: tilest[] = [...tiles];
     if (matDups(chit, tilecomp).length == 1 && delDups(chit, tilecomp).length == 7) {
@@ -193,6 +200,12 @@ export function calc(tiles: tilest[]) {
         }
     }
 
-    console.log(...out);
-    return delDups(out).sort((a: tenpai, b: tenpai) => TILE_O[a.tile] - TILE_O[b.tile]);
+    // console.log(...out);
+    // console.log(delDups(out));
+    // console.log(delDups(out).filter((e) => tileset[e.tile] > 0));
+    const fin = delDups(out)
+        .filter((e) => tileset[e.tile] > 0)
+        .sort((a: tenpai, b: tenpai) => TILE_O[a.tile] - TILE_O[b.tile]);
+    console.timeEnd(UUID);
+    return fin;
 }

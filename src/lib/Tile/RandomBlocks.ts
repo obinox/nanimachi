@@ -177,7 +177,7 @@ export function FormatRDTsumo({ mtsus, fuuro }: { mtsus: tilest[][]; fuuro: tile
     for (let i = 0; i < fuuro.length; i++) {
         fsidx.push(randInt(0, 8));
     }
-    const tenpais = calc(tiles);
+    const tenpais = calc(tiles, fuuro.flat());
     const agarus: tilest[] = delDups(tenpais.map((e) => e.tile)).sort(tilesort);
 
     return { tiles, fuuro, agaru, agarus, fsidx, tenpais };
@@ -195,7 +195,7 @@ export function FlatRDTsumo({ tiles, fuuro }: { tiles: tilest[]; fuuro: tilest[]
     for (let i = 0; i < fuuro.length; i++) {
         fsidx.push(randInt(0, 8));
     }
-    const tenpais = calc(tiles);
+    const tenpais = calc(tiles, fuuro.flat());
     const agarus: tilest[] = delDups(tenpais.map((e) => e.tile)).sort(tilesort);
 
     return { tiles, fuuro, agaru, agarus, fsidx, tenpais };

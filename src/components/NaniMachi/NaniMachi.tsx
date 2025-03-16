@@ -5,7 +5,7 @@ import { RDBlocks, FlatRDB, FormatRDTsumo, MANZU_ISOU, PINZU_ISOU, SOUZU_ISOU, t
 
 export function NaniMachi() {
     const a: tilest[] = "1m 2m 3m 3m 3m 0m 5m 5m 6m 6m 7m 8m 8m".split(" ");
-    console.log(calc(a));
+    // console.log(calc(a));
 
     return (
         <>
