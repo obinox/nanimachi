@@ -1,98 +1,44 @@
-import { Stile, Tiles, Dtile, Format } from "@/components/Tile";
+import { Stile, Tiles, Dtile } from "@/components/Tile";
 import { Akang, Chii, Dkang, Pong, Skang } from "@/components/Tile";
 import { calc } from "@/lib/Machi";
-import { RDBlocks, FlatRDB, FormatRDTsumo, MANZU_ISOU, PINZU_ISOU, SOUZU_ISOU, tilest } from "@/lib/Tile";
+import { RDBlocks, TFlat, FormatRDT, MANZU_ISOU, PINZU_ISOU, SOUZU_ISOU, tilest, FlatRDT, MFlat } from "@/lib/Tile";
 
 export function NaniMachi() {
-    const a: tilest[] = "1m 2m 3m 3m 3m 0m 5m 5m 6m 6m 7m 8m 8m".split(" ");
+    const a: tilest[] = "2m 2m 4m 5m 6m 6m 7m 7m 8m 8m 8m 8m 9m".split(" ");
+    const b: tilest[] = "3p 3p 3p 3p 4p 0p 6p 6p 7p 7p 8p 8p 9p".split(" ");
     // console.log(calc(a));
+    // console.log(calc(b));
+
+    // let c = FormatRDT(RDBlocks(MANZU_ISOU));
+    // let k = 0;
+    // while (c.agarus.length < 9) {
+    //     c = FormatRDT(RDBlocks(MANZU_ISOU));
+    //     k++;
+    // }
 
     return (
         <>
-            <Tiles {...FormatRDTsumo(RDBlocks(MANZU_ISOU))}></Tiles>
+            {/* <Tiles {...FlatRDT(Flat(a))}></Tiles>
             <br></br>
-            <Tiles {...FormatRDTsumo(RDBlocks(PINZU_ISOU))}></Tiles>
-            <br></br>
-            <Tiles {...FormatRDTsumo(RDBlocks(SOUZU_ISOU))}></Tiles>
-            <br></br>
-            <Tiles {...FormatRDTsumo(RDBlocks(MANZU_ISOU))}></Tiles>
-            <br></br>
-            <Tiles {...FormatRDTsumo(RDBlocks(PINZU_ISOU))}></Tiles>
-            <br></br>
-            <Tiles {...FormatRDTsumo(RDBlocks(SOUZU_ISOU))}></Tiles>
-            <br></br>
-            <Tiles {...FormatRDTsumo(RDBlocks())}></Tiles>
-            <br></br>
-            {/* <Tile tile={"0m"} turned={false}></Tile>
-            <Tile tile={"0s"} turned={false}></Tile>
-            <Tile tile={"1z"} turned={false}></Tile>
-            <Tile tile={"0x"} turned={true}></Tile>
-            <Tile tile={"1x"} turned={false}></Tile>
-            <br></br>
-            <Tiles tiles={["1s", "2s", "3s"]}></Tiles>
-            <br></br>
-            <Tile tile={"5s"} turned={false}></Tile>
-            <Dtile dtile={"5s"} utile={"0s"}></Dtile>
-            <Tile tile={"5s"} turned={false}></Tile>
-            <br></br>
-
-            <Akang tile={"0m"}></Akang>
-            <Pong tile="0m" sidx={0} omo={true}></Pong>
+            <Tiles {...FlatRDT(Flat(b))}></Tiles>
             <br></br> */}
-            {/* <Dkang tile="0m" sidx={0} omo={true}></Dkang>
-            <br></br>
-            <Dkang tile="5m" sidx={0} omo={true}></Dkang>
-            <br></br>
-            <Dkang tile="0m" sidx={0}></Dkang>
-            <br></br>
-            <Dkang tile="5m" sidx={0}></Dkang>
-            <br></br>
-            <Dkang tile="0m" sidx={1} omo={true}></Dkang>
-            <br></br>
-            <Dkang tile="5m" sidx={1} omo={true}></Dkang>
-            <br></br>
-            <Dkang tile="0m" sidx={1}></Dkang>
-            <br></br>
-            <Dkang tile="5m" sidx={2}></Dkang>
+            {/* <Tiles {...c}></Tiles>
+            {k}
             <br></br> */}
-            {/* <Skang tile="0m" sidx={0} omo={true}></Skang>
+            <Tiles {...FormatRDT(RDBlocks(MANZU_ISOU))}></Tiles>
             <br></br>
-            <Skang tile="0m" sidx={0}></Skang>
+            <Tiles {...FormatRDT(RDBlocks(PINZU_ISOU))}></Tiles>
             <br></br>
-            <Skang tile="5m" sidx={0}></Skang>
+            <Tiles {...FormatRDT(RDBlocks(SOUZU_ISOU))}></Tiles>
             <br></br>
-            <Skang tile="0m" sidx={1} omo={true}></Skang>
+            <Tiles {...FormatRDT(RDBlocks(MANZU_ISOU))}></Tiles>
             <br></br>
-            <Skang tile="0m" sidx={1}></Skang>
+            <Tiles {...FormatRDT(RDBlocks(PINZU_ISOU))}></Tiles>
             <br></br>
-            <Skang tile="5m" sidx={1}></Skang>
+            <Tiles {...FormatRDT(RDBlocks(SOUZU_ISOU))}></Tiles>
             <br></br>
-            <Skang tile="0m" sidx={2} omo={true}></Skang>
+            <Tiles {...FormatRDT(RDBlocks())}></Tiles>
             <br></br>
-            <Skang tile="0m" sidx={2}></Skang>
-            <br></br>
-            <Skang tile="5m" sidx={2}></Skang>
-            <br></br> */}
-            {/* <Chii tile="1m" fidx={2}></Chii>
-            <br></br>
-            <Chii tile="8m" fidx={0}></Chii>
-            <br></br>
-            <Chii tile="9m" fidx={0}></Chii>
-            <br></br>
-            <Chii tile="0m" fidx={1}></Chii>
-            <br></br>
-            <Pong tile="0m" sidx={0}></Pong>
-            <br></br>
-            <Pong tile="0m" sidx={1}></Pong>
-            <br></br>
-            <Pong tile="0m" sidx={2}></Pong>
-            <br></br>
-            <Pong tile="0m" sidx={0} omo={true}></Pong>
-            <br></br>
-            <Pong tile="0m" sidx={1} omo={true}></Pong>
-            <br></br>
-            <Pong tile="0m" sidx={2} omo={true}></Pong>
-            <br></br> */}
         </>
     );
 }

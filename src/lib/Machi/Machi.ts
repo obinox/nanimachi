@@ -9,10 +9,10 @@ export interface tenpai {
     machi: machi;
 }
 
-export function calc(tiles: tilest[], fuuro: tilest[] = [], tileset = { ...DEFAULT_TILESET }) {
-    console.log(...tiles);
-    const UUID = crypto.randomUUID();
-    console.time(UUID);
+export function calc(tiles: tilest[], fuuro: tilest[] = [], tileset = { ...DEFAULT_TILESET }, debug = false) {
+    if (debug) {
+        console.log(...tiles);
+    }
     const grp: tilest[][] = [[], [], [], [], []];
     const out: tenpai[] = [];
     const clr: boolean[] = [];
@@ -135,6 +135,7 @@ export function calc(tiles: tilest[], fuuro: tilest[] = [], tileset = { ...DEFAU
                 }
             } else if (p.length == 4) {
                 const mat = matDups(p, tilecomp);
+                const del = delDups(p, tilecomp);
                 if (mat.length == 2) {
                     for (const t of Object.values(SHUNTSU).filter((e) => isSubset(e, mat))) {
                         const s = subtract(t, mat)[0];
@@ -149,7 +150,7 @@ export function calc(tiles: tilest[], fuuro: tilest[] = [], tileset = { ...DEFAU
                         }
                         if (cmp == 0) out.push({ tile: s, machi: "kan" });
                     }
-                } else if (mat.length == 0) {
+                } else if (mat.length == 0 && del.length == 2) {
                     const mae = p.slice(0, 2);
                     for (const t of Object.values(KOUTSU).filter((e) => isSubset(e, mae))) {
                         const sub = subtract(t, mae)[0];
@@ -203,9 +204,18 @@ export function calc(tiles: tilest[], fuuro: tilest[] = [], tileset = { ...DEFAU
     // console.log(...out);
     // console.log(delDups(out));
     // console.log(delDups(out).filter((e) => tileset[e.tile] > 0));
-    const fin = delDups(out)
-        .filter((e) => tileset[e.tile] > 0)
-        .sort((a: tenpai, b: tenpai) => TILE_O[a.tile] - TILE_O[b.tile]);
-    console.timeEnd(UUID);
-    return fin;
+
+    const tenshi: tenpai[] = [];
+    const akuma: tenpai[] = [];
+    for (const t of delDups(out)) {
+        if (tileset[t.tile] > 0) {
+            tenshi.push(t);
+        } else {
+            akuma.push(t);
+        }
+    }
+    tenshi.sort((a: tenpai, b: tenpai) => TILE_O[a.tile] - TILE_O[b.tile]);
+    akuma.sort((a: tenpai, b: tenpai) => TILE_O[a.tile] - TILE_O[b.tile]);
+
+    return { tenshi, akuma };
 }

@@ -17,7 +17,7 @@ const machiref = {
     k13: "국사13면",
 };
 
-export function Tiles({ tiles, agaru, agarus, fuuro, fsidx, tenpais }: { tiles: tilest[]; agaru?: tilest; agarus?: tilest[]; fuuro?: tilest[][]; fsidx?: number[]; tenpais?: tenpai[] }) {
+export function Tiles({ tiles, agaru, agarus, fuuro, fsidx, tenshi, akuma }: { tiles: tilest[]; agaru?: tilest; agarus?: tilest[]; fuuro?: tilest[][]; fsidx?: number[]; tenshi?: tenpai[]; akuma?: tenpai[] }) {
     return (
         <>
             <div style={{ whiteSpace: "nowrap" }}>
@@ -29,7 +29,7 @@ export function Tiles({ tiles, agaru, agarus, fuuro, fsidx, tenpais }: { tiles: 
                     {agaru && <Stile tile={agaru} key="agaru"></Stile>}
                     {agarus && "agarus: "}
                     {agarus?.map((t, idx) => (
-                        <Rtile tile={t} key={idx} ruby={delDups(tenpais?.filter((e) => e.tile == t).map((e) => machiref[e.machi]) ?? [])}></Rtile>
+                        <Rtile tile={t} key={idx} ruby={delDups(tenshi?.filter((e) => e.tile == t).map((e) => machiref[e.machi]) ?? [])} disable={akuma?.some((e) => e.tile == t)}></Rtile>
                     ))}
                     {fuuro?.length ? "fuuro: " : ""}
                     {fuuro?.map((m, idx) => {

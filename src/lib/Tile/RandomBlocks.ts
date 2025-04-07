@@ -134,19 +134,15 @@ export function RDBlocks(tileset = DEFAULT_TILESET) {
     return { mtsus, fuuro };
 }
 
-export function FlatRDB({ mtsus, fuuro }: { mtsus: tilest[][]; fuuro: tilest[][] }) {
-    const tiles: tilest[] = [];
-    for (const m of mtsus) {
-        tiles.push(...m);
-    }
+export function TFlat(itiles: tilest[], tsumo: boolean = false) {
+    const tiles: tilest[] = [...itiles];
+    const fuuro: tilest[][] = [];
+    const fsidx: number[] = [];
     tiles.sort(tilesort);
-    for (const m of fuuro) {
-        tiles.push(...m);
-    }
-    return tiles;
+    return { tiles, fuuro, fsidx, tsumo: tsumo };
 }
 
-export function Format({ mtsus, fuuro }: { mtsus: tilest[][]; fuuro: tilest[][] }) {
+export function MFlat({ mtsus, fuuro }: { mtsus: tilest[][]; fuuro: tilest[][] }) {
     const tiles: tilest[] = [];
     for (const m of mtsus) {
         tiles.push(...m);
@@ -161,44 +157,37 @@ export function Format({ mtsus, fuuro }: { mtsus: tilest[][]; fuuro: tilest[][] 
     return { tiles, fuuro, fsidx };
 }
 
-export function FormatRDTsumo({ mtsus, fuuro }: { mtsus: tilest[][]; fuuro: tilest[][] }) {
+export function FormatRDT({ mtsus, fuuro, excl = false }: { mtsus: tilest[][]; fuuro: tilest[][]; excl?: boolean }) {
     const tiles: tilest[] = [];
     for (const m of mtsus) {
         tiles.push(...m);
     }
-    tiles.sort(tilesort);
 
-    const idx = randInt(0, tiles.length);
-    const agaru = tiles[idx];
-
-    tiles.splice(idx, 1);
-
-    const fsidx: number[] = [];
-    for (let i = 0; i < fuuro.length; i++) {
-        fsidx.push(randInt(0, 8));
-    }
-    const tenpais = calc(tiles, fuuro.flat());
-    const agarus: tilest[] = delDups(tenpais.map((e) => e.tile)).sort(tilesort);
-
-    return { tiles, fuuro, agaru, agarus, fsidx, tenpais };
+    return FlatRDT({ tiles, fuuro, excl });
 }
 
-export function FlatRDTsumo({ tiles, fuuro }: { tiles: tilest[]; fuuro: tilest[][] }) {
+export function FlatRDT({ tiles, fuuro, tsumo = true, excl = false }: { tiles: tilest[]; fuuro: tilest[][]; tsumo?: boolean; excl?: boolean }) {
     tiles.sort(tilesort);
 
     const idx = randInt(0, tiles.length);
-    const agaru = tiles[idx];
+    let agaru: tilest = "0x";
 
-    tiles.splice(idx, 1);
+    if (tsumo) {
+        agaru = tiles[idx];
+        tiles.splice(idx, 1);
+    }
 
     const fsidx: number[] = [];
     for (let i = 0; i < fuuro.length; i++) {
         fsidx.push(randInt(0, 8));
     }
-    const tenpais = calc(tiles, fuuro.flat());
-    const agarus: tilest[] = delDups(tenpais.map((e) => e.tile)).sort(tilesort);
+    const { tenshi, akuma } = calc(tiles, fuuro.flat());
+    if (!excl) {
+        tenshi.push(...akuma);
+    }
+    const agarus: tilest[] = delDups(tenshi.map((e) => e.tile)).sort(tilesort);
 
-    return { tiles, fuuro, agaru, agarus, fsidx, tenpais };
+    return { tiles, fuuro, agaru, agarus, fsidx, tenshi, akuma };
 }
 
 /**
